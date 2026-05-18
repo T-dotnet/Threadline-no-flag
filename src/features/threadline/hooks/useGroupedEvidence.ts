@@ -19,21 +19,23 @@ export function useGroupedEvidence(
         ...f, 
         sourceSession: a.label, 
         sourceTimestamp: a.date || "Apr 21, 2024", 
-        sessionId: a.id, 
+        sourceAssessmentId: a.id, 
         notes: a.notes 
       }))),
       ...documentItems.flatMap(d => (d.findings || []).map((f: any) => ({ 
         ...f, 
         sourceSession: d.label, 
         sourceTimestamp: d.date || d.creationDate || "Apr 21, 2024", 
-        sessionId: d.id, 
+        sourceDocumentId: d.id, 
         notes: d.notes 
       }))),
       ...evidenceItems.map(f => ({
         ...f,
         sourceSession: f.sessionSource || f.sourceDocumentName || 'Evidence',
         sourceTimestamp: f.timestamp || f.date,
-        sessionId: f.sourceDocumentId || f.sessionId,
+        sessionId: f.sessionId,
+        sourceAssessmentId: f.sourceAssessmentId,
+        sourceDocumentId: f.sourceDocumentId,
       }))
     ];
 

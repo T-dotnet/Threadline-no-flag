@@ -123,6 +123,7 @@ export const MOCK_CLIENTS = [
 
 export const MOCK_ASSESSMENTS = [
   { 
+    id: "a-gad7",
     title: "GAD-7 (Generalized Anxiety Disorder)", 
     subtitle: "Feb 10, 2026 • Dr. Sarah Jenkins", 
     status: "completed",
@@ -135,6 +136,7 @@ export const MOCK_ASSESSMENTS = [
     descriptor: "Moderate"
   },
   { 
+    id: "a-phq9",
     title: "PHQ-9 (Patient Health Questionnaire)", 
     subtitle: "Mar 15, 2026 • Dr. Mark Ronson", 
     status: "in-progress",
@@ -143,6 +145,7 @@ export const MOCK_ASSESSMENTS = [
     notes: "Pending review of items 7 and 8 with client during next session."
   },
   { 
+    id: "a-wai",
     title: "WAI (Working Alliance Inventory)", 
     subtitle: "Apr 02, 2026 • Dr. Sarah Jenkins", 
     status: "not-started",
@@ -151,6 +154,7 @@ export const MOCK_ASSESSMENTS = [
     notes: "Scheduled for next intake session to establish baseline."
   },
   { 
+    id: "a-asrs6",
     title: "ASRS-6 (Adult ADHD Screening)", 
     subtitle: "Jan 20, 2026 • Dr. Emily Blunt", 
     status: "completed",
@@ -163,6 +167,7 @@ export const MOCK_ASSESSMENTS = [
     descriptor: "Significant"
   },
   { 
+    id: "a-dass21",
     title: "DASS-21 (Depression Anxiety Stress Scale)", 
     subtitle: "Scheduled • Dr. Sarah Jenkins", 
     status: "not-started",
@@ -276,38 +281,38 @@ export const MOCK_EVIDENCE_ITEMS = [
     relevanceCause: "stale_data"
   },
   { label: "Assessment Result", score: "0.95", type: "evidence", hasConflict: false },
-  { label: "PHQ-9 (Patient Health Questionnaire)", score: "0.91", type: "assessment", hasConflict: false, findings: [
-    { id: 'f-phq9-1', text: 'Significant impairment in social communication during structured play', timestamp: 'Standardized Score: 85', tags: ['Social'], type: "observation" },
-    { id: 'f-phq9-2', text: 'Elevated tactile sensitivity reported on questionnaire', timestamp: 'Sub-scale: Sensory', tags: ['Sensory'], type: "EXTRACT" },
+  { id: 'ev-phq9', label: "PHQ-9 (Patient Health Questionnaire)", score: "0.91", type: "assessment", hasConflict: false, findings: [
+    { id: 'f-phq9-1', text: 'Significant impairment in social communication during structured play', timestamp: 'Standardized Score: 85', tags: ['Social'], type: "observation", sourceAssessmentId: "a-phq9" },
+    { id: 'f-phq9-2', text: 'Elevated tactile sensitivity reported on questionnaire', timestamp: 'Sub-scale: Sensory', tags: ['Sensory'], type: "EXTRACT", sourceAssessmentId: "a-phq9" },
   ] },
-  { label: "GAD-7 (Generalized Anxiety Disorder)", score: "0.88", type: "assessment", hasConflict: true, conflictTargetId: "Parent Questionnaire", conflictTargetLabel: "Parent Questionnaire", conflictTargetType: "document", conflictDescription: "The reported anxiety severity indicators in this assessment are significantly lower than observations in the Parent Questionnaire.", findings: [
-    { id: 'f-gad7-1', text: 'Frequent excessive worry over workplace responsibilities', timestamp: 'p. 1', tags: ['Environment', 'Emotional'], type: "EXTRACT" }
+  { id: 'ev-gad7', label: "GAD-7 (Generalized Anxiety Disorder)", score: "0.88", type: "assessment", hasConflict: true, conflictTargetId: "Parent Questionnaire", conflictTargetLabel: "Parent Questionnaire", conflictTargetType: "document", conflictDescription: "The reported anxiety severity indicators in this assessment are significantly lower than observations in the Parent Questionnaire.", findings: [
+    { id: 'f-gad7-1', text: 'Frequent excessive worry over workplace responsibilities', timestamp: 'p. 1', tags: ['Environment', 'Emotional'], type: "EXTRACT", sourceAssessmentId: "a-gad7" }
   ] },
-  { label: "School Reports", score: "0.94", type: "document", hasConflict: false, findings: [
-    { id: 'f-ref-1', text: 'Observations suggest a pattern of sensory seeking behavior that is particularly evident during structured tasks.', timestamp: 'p. 4', tags: ['Sensory'], type: "observation" },
-    { id: 'f-ref-2', text: 'The preschool records indicate that social communication challenge was a primary barrier to peer engagement.', timestamp: 'p. 2', tags: ['Social'], type: "EXTRACT" },
-    { id: 'f-ref-3', text: 'Detailed family history collection reveals a positive history for neurodevelopmental conditions, with an immediate family member previously diagnosed with Autism Spectrum Disorder (ASD).', timestamp: 'p. 9', tags: ['Environment'], type: "EXTRACT" },
+  { id: 'ev-school', label: "School Reports", score: "0.94", type: "document", hasConflict: false, findings: [
+    { id: 'f-ref-1', text: 'Observations suggest a pattern of sensory seeking behavior that is particularly evident during structured tasks.', timestamp: 'p. 4', tags: ['Sensory'], type: "observation", sourceDocumentId: "doc-1" },
+    { id: 'f-ref-2', text: 'The preschool records indicate that social communication challenge was a primary barrier to peer engagement.', timestamp: 'p. 2', tags: ['Social'], type: "EXTRACT", sourceDocumentId: "doc-1" },
+    { id: 'f-ref-3', text: 'Detailed family history collection reveals a positive history for neurodevelopmental conditions, with an immediate family member previously diagnosed with Autism Spectrum Disorder (ASD).', timestamp: 'p. 9', tags: ['Environment'], type: "EXTRACT", sourceDocumentId: "doc-1" },
   ] },
-  { label: "Parent Questionnaire", score: "0.55", type: "document", hasConflict: true, conflictTargetId: "GAD-7 (Generalized Anxiety Disorder)", conflictTargetLabel: "GAD-7 (Generalized Anxiety Disorder)", conflictTargetType: "assessment", conflictDescription: "Observations in this report indicate high emotional reactivity, which conflicts with the 'GAD-7 (Generalized Anxiety Disorder)' assessment.", findings: [
-    { id: 'f-parent-1', text: 'Reports of difficulty with transitions', timestamp: 'p. 1', tags: ['Behavioral'] },
+  { id: 'ev-parent', label: "Parent Questionnaire", score: "0.55", type: "document", hasConflict: true, conflictTargetId: "GAD-7 (Generalized Anxiety Disorder)", conflictTargetLabel: "GAD-7 (Generalized Anxiety Disorder)", conflictTargetType: "assessment", conflictDescription: "Observations in this report indicate high emotional reactivity, which conflicts with the 'GAD-7 (Generalized Anxiety Disorder)' assessment.", findings: [
+    { id: 'f-parent-1', text: 'Reports of difficulty with transitions', timestamp: 'p. 1', tags: ['Behavioral'], sourceDocumentId: "doc-1" },
   ], relevanceCause: "off_target" },
   { label: "Depressed mood", score: "0.84", type: "criteria", rationale: "Multiple instances of depressed mood and anhedonia reported.", hasConflict: false, status: "Met", tags: ["Emotional", "Behavioral", "Cognitive"], findings: [
-    { id: "crit-f-e8", text: "Client sighed deeply and paused for several seconds before answering questions about self-worth.", type: "behavioural", timestamp: "35:00", framework: "Depressive Features", tags: ['Emotional', 'Behavioral'] },
-    { id: "crit-f-e10", text: "I found it hard to focus on my breath when the room was so quiet.", type: "verbatim", timestamp: "28:10", framework: "Anxiety Management", tags: ['Cognitive', 'Environment'] }
+    { id: "crit-f-e8", text: "Client sighed deeply and paused for several seconds before answering questions about self-worth.", type: "behavioural", timestamp: "35:00", framework: "Depressive Features", tags: ['Emotional', 'Behavioral'], sessionId: "S-8823" },
+    { id: "crit-f-e10", text: "I found it hard to focus on my breath when the room was so quiet.", type: "verbatim", timestamp: "28:10", framework: "Anxiety Management", tags: ['Cognitive', 'Environment'], sessionId: "S-8823" }
   ] },
   { label: "Fear of negative evaluation (Criteria)", score: "0.55", type: "criteria", rationale: "Some indication of fear of others judging, but not pervasive yet.", hasConflict: false, status: "Deferred", tags: ["Social", "Physical", "Cognitive"], cause: "insufficient_data", findings: [
-    { id: "crit-f-e1", text: "I feel like my heart is racing whenever I have to speak in front of others.", type: "verbatim", timestamp: "05:12", framework: "Social Anxiety Disorder (SAD)", tags: ['Physical', 'Social'] },
-    { id: "crit-f-e7", text: "I think everyone is judging how I move and speak.", type: "verbatim", timestamp: "22:30", framework: "Social Anxiety Disorder (SAD)", tags: ['Cognitive', 'Social'] }
+    { id: "crit-f-e1", text: "I feel like my heart is racing whenever I have to speak in front of others.", type: "verbatim", timestamp: "05:12", framework: "Social Anxiety Disorder (SAD)", tags: ['Physical', 'Social'], sessionId: "S-8822" },
+    { id: "crit-f-e7", text: "I think everyone is judging how I move and speak.", type: "verbatim", timestamp: "22:30", framework: "Social Anxiety Disorder (SAD)", tags: ['Cognitive', 'Social'], sessionId: "S-8822" }
   ] },
   { label: "Persistent concern about additional", score: "0.32", type: "criteria", rationale: "Limited evidence supporting persistent concern about additional panic attacks.", hasConflict: false, status: "Not Met", tags: ["Physical", "Environment"], findings: [
-    { id: "crit-f-e4", text: "Sometimes I just can't breathe properly when the phone rings.", type: "verbatim", timestamp: "15:20", framework: "Panic Disorder", tags: ['Physical', 'Environment'] }
+    { id: "crit-f-e4", text: "Sometimes I just can't breathe properly when the phone rings.", type: "verbatim", timestamp: "15:20", framework: "Panic Disorder", tags: ['Physical', 'Environment'], sessionId: "S-8821" }
   ] },
   { label: "Social Isolation (Clinical Finding)", score: "0.55", type: "criteria", rationale: "Mixed indicators regarding social isolation and withdrawal; further investigation required to clear conflict.", hasConflict: true, status: "Deferred", tags: ["Social", "Behavioral"], cause: "source_conflict", findings: [
-    { id: "crit-f-new1", text: "Client isolates in their room during family gatherings.", type: "behavioural", timestamp: "10:15", framework: "Social Interaction", tags: ['Behavioral'], score: "0.85" },
-    { id: "crit-f-new2", text: "I have many friends at school that I talk to every day.", type: "verbatim", timestamp: "11:20", framework: "Social Interaction", tags: ['Social'], score: "0.90", hasConflict: true },
-    { id: "crit-f-new3", text: "Teacher notes state client sits alone at lunch and does not interact.", type: "EXTRACT", timestamp: "p. 2", framework: "Social Interaction", tags: ['Environment'], score: "0.88", hasConflict: true },
-    { id: "crit-f-new4", text: "Client mentioned they like to read books over watching movies.", type: "verbatim", timestamp: "14:10", framework: "Hobbies", tags: ['Cognitive'], score: "0.20" }, 
-    { id: "crit-f-new5", text: "Avoids group activities during recess.", type: "behavioural", timestamp: "09:30", framework: "Social Interaction", tags: ['Behavioral'], score: "0.80" }
+    { id: "crit-f-new1", text: "Client isolates in their room during family gatherings.", type: "behavioural", timestamp: "10:15", framework: "Social Interaction", tags: ['Behavioral'], score: "0.85", sessionId: "S-8821" },
+    { id: "crit-f-new2", text: "I have many friends at school that I talk to every day.", type: "verbatim", timestamp: "11:20", framework: "Social Interaction", tags: ['Social'], score: "0.90", hasConflict: true, sessionId: "S-8821" },
+    { id: "crit-f-new3", text: "Teacher notes state client sits alone at lunch and does not interact.", type: "EXTRACT", timestamp: "p. 2", framework: "Social Interaction", tags: ['Environment'], score: "0.88", hasConflict: true, sourceDocumentId: "doc-1" },
+    { id: "crit-f-new4", text: "Client mentioned they like to read books over watching movies.", type: "verbatim", timestamp: "14:10", framework: "Hobbies", tags: ['Cognitive'], score: "0.20", sessionId: "S-8821" }, 
+    { id: "crit-f-new5", text: "Avoids group activities during recess.", type: "behavioural", timestamp: "09:30", framework: "Social Interaction", tags: ['Behavioral'], score: "0.80", sessionId: "S-8821" }
   ] },
   { label: "Fear of negative evaluation", score: "0.85", type: "nextstep", impact: "High information gain", rationale: "Standardised tool identifies this as the primary driver of social avoidance.", suggestedClinicalFocus: "Social Evaluation", hasConflict: false },
   { label: "Severity of depressive symptoms", score: "0.55", type: "nextstep", impact: "Quantifies symptom severity", rationale: "Client describes significant mood dips but hasn't had clinical scoring since Feb.", suggestedClinicalFocus: "Mood Regulation", hasConflict: false, impactCause: "non_clinical_source" },

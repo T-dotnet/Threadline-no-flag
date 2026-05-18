@@ -31,7 +31,7 @@ import { CreateClinicalEvidenceModal } from "../modals";
 export function AssessmentResultScreen({ clientId, assessmentIndex, onBack, onGuidelinesClick }: { clientId: string, assessmentIndex: string, onBack: () => void, onGuidelinesClick?: () => void }) {
   const clientData = (MOCK_CLIENT_DATA as any)[clientId];
   const assessments = clientData?.assessments || MOCK_ASSESSMENTS;
-  const assessment = assessments[parseInt(assessmentIndex)] || assessments[0];
+  const assessment = assessments.find((a: any) => a.id === assessmentIndex || a.title === assessmentIndex) || assessments[parseInt(assessmentIndex)] || assessments[0];
   const clientMeta = MOCK_CLIENTS.find(c => c.id === clientId) || MOCK_CLIENTS[0];
   const [activeTabLeft, setActiveTabLeft] = useState("Overall Impression");
   const [isEditing, setIsEditing] = useState(false);
