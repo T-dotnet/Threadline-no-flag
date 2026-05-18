@@ -66,6 +66,7 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
   const [acceptedMappings, setAcceptedMappings] = useState<MappingItem[]>([]);
   
   const [hypothesisSubmitted, setHypothesisSubmitted] = useState(false);
+  const [hypothesisSubmittedAt, setHypothesisSubmittedAt] = useState<string | null>(null);
   const [isDeferred, setIsDeferred] = useState(false);
   const [impressionFormulated, setImpressionFormulated] = useState(false);
   const [reportApproved, setReportApproved] = useState(false);
@@ -85,6 +86,7 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     setLowConfidenceMappings([]);
     setAcceptedMappings([]);
     setHypothesisSubmitted(false);
+    setHypothesisSubmittedAt(null);
     setIsDeferred(false);
     setImpressionFormulated(false);
     setReportApproved(false);
@@ -147,6 +149,7 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
 
     clinicalStore.updateCognitiveLoop(activeClientId, activeAssessmentId, {
       currentStep,
+      hypothesisSubmittedAt,
       impressionFormulated,
       isDeferred,
       reportApproved,
@@ -154,7 +157,7 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
       conflicts,
       missingDocuments
     });
-  }, [currentStep, hypothesisSubmitted, impressionFormulated, isDeferred, reportApproved, acceptedMappings, conflicts, missingDocuments]);
+  }, [currentStep, hypothesisSubmitted, hypothesisSubmittedAt, impressionFormulated, isDeferred, reportApproved, acceptedMappings, conflicts, missingDocuments]);
 
   // Reset and reload when client or assessment changes.
   // Order matters: seed from mock first, then overlay with persisted store data so the
@@ -198,7 +201,9 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
       const key = `${activeClientId}:${activeAssessmentId}`;
       const loop = clinicalStore.cognitiveLoops[key];
       if (loop) {
-        setHypothesisSubmitted(!!loop.hypothesisText || !!loop.hypothesisSubmittedAt);
+        const wasSubmitted = !!loop.hypothesisText || !!loop.hypothesisSubmittedAt;
+        setHypothesisSubmitted(wasSubmitted);
+        setHypothesisSubmittedAt(loop.hypothesisSubmittedAt ?? null);
         setIsDeferred(loop.isDeferred);
         setImpressionFormulated(loop.impressionFormulated);
         setReportApproved(loop.reportApproved);
@@ -225,7 +230,13 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     setMissingDocuments: (d: MissingDocItem[]) => isEnabled && setMissingDocuments(d),
     setLowConfidenceMappings: (m: MappingItem[]) => isEnabled && setLowConfidenceMappings(m),
     setAcceptedMappings: (m: MappingItem[]) => isEnabled && setAcceptedMappings(m),
-    setHypothesisSubmitted: (v: boolean) => isEnabled && setHypothesisSubmitted(v),
+    setHypothesisSubmitted: (v: boolean) => {
+      if (!isEnabled) return;
+      setHypothesisSubmitted(v);
+      // Record timestamp on first submission; clear on reset
+      if (v) setHypothesisSubmittedAt(prev => prev ?? new Date().toISOString());
+      else setHypothesisSubmittedAt(null);
+    },
     setIsDeferred: (v: boolean) => isEnabled && setIsDeferred(v),
     setImpressionFormulated: (v: boolean) => isEnabled && setImpressionFormulated(v),
     setReportApproved: (v: boolean) => isEnabled && setReportApproved(v),
