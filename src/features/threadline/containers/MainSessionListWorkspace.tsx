@@ -4,21 +4,12 @@
  */
 
 import React, { useState } from "react";
-import { 
-  Search,
-  Plus,
-  ArrowLeft
-} from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 
 // UI Components
-import { 
-  Button, 
-  Card, 
-  Badge, 
-  Typography, 
-  Input, 
-  TableFooter 
-} from "@ui/index";
+import { Button, Card, Badge, Typography, TableFooter } from "@ui/index";
+import { SearchInput } from "../components/SearchInput";
+import { usePagination } from "../hooks/usePagination";
 import { cn } from "@lib/utils";
 import { WorkspaceLayout } from "@components/layout/WorkspaceLayout";
 import { CreateSessionModal } from "../modals/CreateSessionModal";
@@ -29,8 +20,6 @@ import { MOCK_CLIENTS, MOCK_CLIENT_DATA } from "../mockData";
 
 export function MainSessionListWorkspace() {
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
-  const [rpp, setRpp] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<any | null>(null);
 
@@ -67,21 +56,17 @@ export function MainSessionListWorkspace() {
     s.clinicians.some(cl => cl.toLowerCase().includes(search.toLowerCase()))
   );
 
-  const pagedItems = filtered.slice(page * rpp, (page + 1) * rpp);
-  const total = Math.ceil(filtered.length / rpp);
+  const { page, setPage, rpp, setRpp, pagedItems, total, s, e } = usePagination(filtered);
 
   const mainContent = (
     <div className="flex flex-col h-full">
       <div className="p-6 bg-gray-50/30 border-b border-divider flex justify-end">
-           <div className="relative w-full md:w-[320px]">
-              <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" />
-              <Input 
-                  placeholder="Search by client, focus..." 
-                  className="pl-10 h-10"
-                  value={search}
-                  onChange={e => setSearch(e.target.value)}
-              />
-           </div>
+           <SearchInput
+              placeholder="Search by client, focus..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full md:w-[320px]"
+           />
       </div>
 
       <div className="overflow-x-auto flex-1">
@@ -142,8 +127,8 @@ export function MainSessionListWorkspace() {
           rpp={rpp}
           setRpp={setRpp}
           total={total}
-          s={page * rpp + 1}
-          e={Math.min((page + 1) * rpp, filtered.length)}
+          s={s}
+          e={e}
           count={filtered.length}
           className="bg-white border-t border-divider"
       />

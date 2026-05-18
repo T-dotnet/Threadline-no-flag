@@ -6,6 +6,7 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Search, Filter, X } from "lucide-react";
 import { Modal, Typography, Checkbox, Button } from "@ui/index";
+import { evidenceTypeClass } from "../utils/evidenceUtils";
 
 interface EvidencePickerModalProps {
   isOpen: boolean;
@@ -203,13 +204,7 @@ export function EvidencePickerModal({
                   {item.type === 'verbatim' ? `"${item.text}"` : item.text}
                 </Typography>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${
-                    item.type === 'verbatim' ? 'bg-secondary-focus text-secondary-focus-text' :
-                    item.type === 'behavioural' ? 'bg-secondary-balance text-secondary-balance-text' :
-                    item.type === 'extract' ? 'bg-secondary-connection text-secondary-connection-text' :
-                    item.type === 'observation' ? 'bg-secondary-sleep text-secondary-sleep-text' :
-                    'bg-slate-100 text-slate-500'
-                  }`}>
+                  <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-tight ${evidenceTypeClass(item.type)}`}>
                     {item.type || 'finding'}
                   </div>
                   <Typography variant="label-micro" className="text-slate-400">

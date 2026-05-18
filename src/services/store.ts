@@ -133,6 +133,33 @@ export const useAppStore = create<AppState>()(
   )
 );
 
+// --- Default record shapes (shared by actions and getters) ---
+
+const DEFAULT_COGNITIVE_LOOP_RECORD: CognitiveLoopRecord = {
+  currentStep: 1,
+  stepHistory: [],
+  hypothesisText: null,
+  hypothesisSubmittedAt: null,
+  impressionFormulated: false,
+  impressionFormulatedAt: null,
+  isDeferred: false,
+  deferredAt: null,
+  reportApproved: false,
+  reportApprovedAt: null,
+  acceptedMappings: [],
+  conflicts: [],
+  missingDocuments: []
+};
+
+const DEFAULT_EVIDENCE_DECISION: EvidenceDecisionStore = {
+  acceptedItems: [],
+  rejectedItems: {},
+  deferredItems: [],
+  modifiedItems: [],
+  hasSkippedConflicts: false,
+  conflictSkippedAt: null
+};
+
 // --- Clinical Data Store (Replacing localStore.ts) ---
 
 interface ClinicalState {
@@ -152,6 +179,7 @@ interface ClinicalState {
   addSession: (clientId: string, session: SessionRecord) => void;
   setSessions: (clientId: string, sessions: SessionRecord[]) => void;
   addDocument: (clientId: string, doc: DocumentRecord) => void;
+  setDocuments: (clientId: string, docs: DocumentRecord[]) => void;
   updateCognitiveLoop: (clientId: string, assessmentId: string, patch: Partial<CognitiveLoopRecord>) => void;
   setConditions: (conditions: Condition[]) => void;
   addCondition: (condition: Condition) => void;
@@ -218,21 +246,7 @@ export const useClinicalStore = create<ClinicalState>()(
 
       updateCognitiveLoop: (clientId, assessmentId, patch) => set((state) => {
         const key = `${clientId}:${assessmentId}`;
-        const current = state.cognitiveLoops[key] || {
-          currentStep: 1,
-          stepHistory: [],
-          hypothesisText: null,
-          hypothesisSubmittedAt: null,
-          impressionFormulated: false,
-          impressionFormulatedAt: null,
-          isDeferred: false,
-          deferredAt: null,
-          reportApproved: false,
-          reportApprovedAt: null,
-          acceptedMappings: [],
-          conflicts: [],
-          missingDocuments: []
-        };
+        const current = state.cognitiveLoops[key] || DEFAULT_COGNITIVE_LOOP_RECORD;
         return {
           cognitiveLoops: { ...state.cognitiveLoops, [key]: { ...current, ...patch } }
         };
@@ -240,47 +254,25 @@ export const useClinicalStore = create<ClinicalState>()(
 
       // Getters
       getAssessments: (clientId) => get().assessments[clientId] || [],
-      
-      getEvidenceDecisions: (clientId, assessmentId) => 
-        get().evidenceDecisions[`${clientId}:${assessmentId}`] || {
-          acceptedItems: [],
-          rejectedItems: {},
-          deferredItems: [],
-          modifiedItems: [],
-          hasSkippedConflicts: false,
-          conflictSkippedAt: null
-        },
 
-      getCognitiveLoop: (clientId, assessmentId) => 
-        get().cognitiveLoops[`${clientId}:${assessmentId}`] || {
-          currentStep: 1,
-          stepHistory: [],
-          hypothesisText: null,
-          hypothesisSubmittedAt: null,
-          impressionFormulated: false,
-          impressionFormulatedAt: null,
-          isDeferred: false,
-          deferredAt: null,
-          reportApproved: false,
-          reportApprovedAt: null,
-          acceptedMappings: [],
-          conflicts: [],
-          missingDocuments: []
-        },
+      getEvidenceDecisions: (clientId, assessmentId) =>
+        get().evidenceDecisions[`${clientId}:${assessmentId}`] || DEFAULT_EVIDENCE_DECISION,
+
+      getCognitiveLoop: (clientId, assessmentId) =>
+        get().cognitiveLoops[`${clientId}:${assessmentId}`] || DEFAULT_COGNITIVE_LOOP_RECORD,
 
       getClients: () => get().clients,
       getDocuments: (clientId) => get().documents[clientId] || [],
+      setDocuments: (clientId, docs) => set((state) => ({
+        documents: { ...state.documents, [clientId]: docs }
+      })),
       resetStore: () => set((state) => {
         const preservedDecisions: Record<string, EvidenceDecisionStore> = {};
         Object.entries(state.evidenceDecisions).forEach(([key, decisions]) => {
           if (Object.keys(decisions.rejectedItems).length > 0) {
             preservedDecisions[key] = {
-              acceptedItems: [],
+              ...DEFAULT_EVIDENCE_DECISION,
               rejectedItems: decisions.rejectedItems,
-              deferredItems: [],
-              modifiedItems: [],
-              hasSkippedConflicts: false,
-              conflictSkippedAt: null
             };
           }
         });

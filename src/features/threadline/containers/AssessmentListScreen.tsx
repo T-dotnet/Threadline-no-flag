@@ -20,14 +20,14 @@ import {
 import { motion, AnimatePresence } from "motion/react";
 
 // UI Components
-import { 
-  Button, 
-  Badge, 
-  Card, 
-  Typography, 
-  Input, 
-  TableFooter 
+import {
+  Button,
+  Badge,
+  Card,
+  Typography,
+  TableFooter
 } from "@ui/index";
+import { SearchInput } from "../components/SearchInput";
 import { StatusBadge } from "@shared/StatusBadge";
 import { EmptyState } from "@shared/EmptyState";
 import { SectionHeader } from "@shared/SectionHeader";
@@ -447,15 +447,12 @@ function AssessmentListScreenContent({ clientId, onBack }: { clientId: string, o
                   {unlockEvidenceBanner}
                   <Card className="p-0 border-divider overflow-hidden">
                     <div className="p-6 border-b border-divider bg-gray-50/30 flex justify-end">
-                      <div className="relative w-full sm:w-[320px]">
-                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
-                        <Input
-                          value={search}
-                          onChange={e => setSearch(e.target.value)}
-                          placeholder="Search Assessment"
-                          className="pl-10"
-                        />
-                      </div>
+                      <SearchInput
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        placeholder="Search Assessment"
+                        className="w-full sm:w-[320px]"
+                      />
                     </div>
 
                     <div className="p-6 space-y-6">

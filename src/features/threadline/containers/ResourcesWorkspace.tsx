@@ -1,12 +1,14 @@
 import React, { useState } from "react";
-import { Search, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { TEXT_PRIMARY, TEXT_SECONDARY, DIVIDER, outlineBtn, cardStyle, cardContentStyle, h1Style, subStyle } from "../constants";
 import { MultiDropdown } from "@components/common/UIElements";
 import { WorkspaceLayout } from "@components/layout/WorkspaceLayout";
-import { Input, Button, Card, Typography } from "@ui/index";
+import { Button, Card, Typography } from "@ui/index";
+import { SearchInput } from "../components/SearchInput";
 
 export function ResourcesWorkspace() {
   const [selectedCats, setSelectedCats] = useState<string[]>(["All"]);
+  const [search, setSearch] = useState("");
   const categories = ["All", "User Guides", "Templates", "Brochures", "Consumer Handouts", "White Papers"];
   
   const toggleCat = (cat: string) => {
@@ -40,13 +42,11 @@ export function ResourcesWorkspace() {
           width={240} 
         />
 
-        <div className="relative w-[320px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" size={18} />
-          <Input 
-            placeholder="Search Resources" 
-            className="pl-10"
-          />
-        </div>
+        <SearchInput
+          placeholder="Search Resources"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
       </div>
 
       {/* Grid */}

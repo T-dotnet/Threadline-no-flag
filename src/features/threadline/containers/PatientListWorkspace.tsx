@@ -4,18 +4,18 @@
  */
 
 import React, { useState } from "react";
-import { Search, Plus, MoreVertical, ChevronDown, User, Calendar, Phone, Mail } from "lucide-react";
+import { Plus, MoreVertical, ChevronDown, User, Calendar, Phone, Mail } from "lucide-react";
 
 // UI Components
-import { 
-  Button, 
-  Badge, 
-  Card, 
-  Typography, 
-  Input, 
-  Select, 
-  TableFooter 
+import {
+  Button,
+  Badge,
+  Card,
+  Typography,
+  Select,
+  TableFooter
 } from "@ui/index";
+import { SearchInput } from "../components/SearchInput";
 import { SectionHeader } from "@shared/SectionHeader";
 import { StatusBadge } from "@shared/StatusBadge";
 import { cn } from "@lib/utils";
@@ -73,15 +73,12 @@ export function PatientListWorkspace() {
                     <option value="Inactive">Inactive</option>
                 </Select>
              </div>
-             <div className="relative w-full md:w-[320px]">
-                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" />
-                <Input 
-                    placeholder="Search by name, email..." 
-                    className="pl-10"
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                />
-             </div>
+             <SearchInput
+                placeholder="Search by name, email..."
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full md:w-[320px]"
+             />
         </div>
 
         <div className="overflow-x-auto">
