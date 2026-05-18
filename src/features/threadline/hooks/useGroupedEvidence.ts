@@ -3,13 +3,38 @@ import { useMemo } from 'react';
 export function useGroupedEvidence(
   localSessions: any[],
   assessmentItems: any[],
-  documentItems: any[]
+  documentItems: any[],
+  evidenceItems: any[] = []
 ) {
   return useMemo(() => {
     const allEvidenceSnippets = [
-      ...localSessions.flatMap(s => (s.evidence || []).map((f: any) => ({ ...f, sourceSession: s.focus || 'Clinical Snapshot', sourceTimestamp: s.date, sessionId: s.id, notes: s.notes }))),
-      ...assessmentItems.flatMap(a => (a.findings || []).map((f: any) => ({ ...f, sourceSession: a.label, sourceTimestamp: "Apr 21, 2024", sessionId: a.id, notes: a.notes }))),
-      ...documentItems.flatMap(d => (d.findings || []).map((f: any) => ({ ...f, sourceSession: d.label, sourceTimestamp: "Apr 21, 2024", sessionId: d.id, notes: d.notes })))
+      ...localSessions.flatMap(s => (s.evidence || []).map((f: any) => ({ 
+        ...f, 
+        sourceSession: s.focus || s.description || 'Clinical Snapshot', 
+        sourceTimestamp: s.date, 
+        sessionId: s.id, 
+        notes: s.notes 
+      }))),
+      ...assessmentItems.flatMap(a => (a.findings || []).map((f: any) => ({ 
+        ...f, 
+        sourceSession: a.label, 
+        sourceTimestamp: a.date || "Apr 21, 2024", 
+        sessionId: a.id, 
+        notes: a.notes 
+      }))),
+      ...documentItems.flatMap(d => (d.findings || []).map((f: any) => ({ 
+        ...f, 
+        sourceSession: d.label, 
+        sourceTimestamp: d.date || d.creationDate || "Apr 21, 2024", 
+        sessionId: d.id, 
+        notes: d.notes 
+      }))),
+      ...evidenceItems.map(f => ({
+        ...f,
+        sourceSession: f.sessionSource || f.sourceDocumentName || 'Evidence',
+        sourceTimestamp: f.timestamp || f.date,
+        sessionId: f.sourceDocumentId || f.sessionId,
+      }))
     ];
 
     const tagsMap = new Map<string, any[]>();

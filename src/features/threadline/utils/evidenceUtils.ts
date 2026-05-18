@@ -9,7 +9,7 @@ export const getEvidenceBadgeProps = (
   if (normalizedType === "verbatim") {
     return {
       status: status || "processing",
-      label: "Verbatim",
+      label: "VERBATIM",
       className: "bg-secondary-focus text-secondary-focus-text border-0",
     };
   }
@@ -17,7 +17,7 @@ export const getEvidenceBadgeProps = (
   if (normalizedType === "behavioural") {
     return {
       status: status || "completed",
-      label: "Behavioural",
+      label: "BEHAVIOURAL",
       className: "bg-secondary-balance text-secondary-balance-text border-0",
     };
   }
@@ -30,7 +30,7 @@ export const getEvidenceBadgeProps = (
   ) {
     return {
       status: status || "ready",
-      label: "Observation",
+      label: "OBSERVATION",
       className: "bg-secondary-sleep text-secondary-sleep-text border-0",
     };
   }

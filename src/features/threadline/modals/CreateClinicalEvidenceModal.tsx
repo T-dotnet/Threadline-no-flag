@@ -35,7 +35,7 @@ export function CreateClinicalEvidenceModal({
   context = 'session'
 }: CreateClinicalEvidenceModalProps) {
   const [text, setText] = useState(initialText);
-  const [type, setType] = useState<'verbatim' | 'behavioural'>('verbatim');
+  const [type, setType] = useState<string>('verbatim');
   const [tags, setTags] = useState<string[]>(initialTags);
   const [notes, setNotes] = useState("");
   const [source, setSource] = useState(editingItem?.sourceLabel || "");
@@ -44,14 +44,14 @@ export function CreateClinicalEvidenceModal({
     if (isOpen) {
       if (editingItem) {
         setText(editingItem.text || "");
-        setType(editingItem.type || 'verbatim');
+        setType(editingItem.type || (context === 'assessment' ? 'observation' : context === 'document' ? 'extract' : 'verbatim'));
         setTags(editingItem.tags || []);
         setNotes(editingItem.notes || "");
         setSource(editingItem.sourceLabel || "");
       } else {
         setText(initialText);
         setTags(initialTags || []);
-        setType('verbatim');
+        setType(context === 'assessment' ? 'observation' : context === 'document' ? 'extract' : 'verbatim');
         setNotes("");
         setSource("");
       }

@@ -530,7 +530,7 @@ export function AssessmentResultScreen({ clientId, assessmentIndex, onBack, onGu
                         <StatusBadge 
                           status={(evidence.type === 'verbatim' || evidence.verbatim) ? 'processing' : 'completed'} 
                           showIcon={false}
-                          label={evidence.type === 'verbatim' || evidence.verbatim ? 'Verbatim' : (evidence.type === 'behavioural' ? 'Behavioural' : 'Observation')}
+                          label={evidence.type === 'verbatim' || evidence.verbatim ? 'VERBATIM' : (evidence.type === 'behavioural' ? 'BEHAVIOURAL' : 'OBSERVATION')}
                           className={(evidence.type === 'verbatim' || evidence.verbatim) ? "bg-blue-100 text-slate-900 border-0" : "bg-emerald-100 text-slate-900 border-0"}
                         />
                         <StatusBadge 

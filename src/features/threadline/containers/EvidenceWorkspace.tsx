@@ -125,8 +125,8 @@ export function EvidenceWorkspace({
   clientId = "125566",
 }: {
   onViewProfile?: () => void;
-  onNavigateToAssessments?: () => void;
-  onNavigateToDocuments?: () => void;
+  onNavigateToAssessments?: (id?: string) => void;
+  onNavigateToDocuments?: (id?: string) => void;
   onNavigateToSession?: (session: any) => void;
   onUnlockReport?: () => void;
   clientId?: string;
@@ -372,11 +372,13 @@ export function EvidenceWorkspace({
   const documentItems = localEvidenceItems
     .filter((i) => i.type === "document")
     .map((i: any) => ({ ...i, cause: i.relevanceCause || i.cause }));
+  const standaloneEvidence = localEvidenceItems.filter((i) => i.type === "evidence");
 
   const { tagGroups, allEvidenceSnippets } = useGroupedEvidence(
     localSessions,
     assessmentItems,
     documentItems,
+    standaloneEvidence
   );
   const currentSession = localSessions.find(
     (s: any) => s.id === activeSessionId,
@@ -1151,7 +1153,7 @@ export function EvidenceWorkspace({
               }
               items={[
                 ...localSessions.map((s: any) => ({
-                  label: s.focus || "Clinical Snapshot",
+                  label: s.focus || s.description || "Clinical Snapshot",
                   score: s.score || "0.98",
                   type: "session",
                   id: s.id,
@@ -1317,7 +1319,7 @@ export function EvidenceWorkspace({
                   return (
                     <ReviewItem
                       key={id}
-                      label={session.focus || "Clinical"}
+                      label={session.focus || session.description || "Clinical Snapshot"}
                       score={session.score || "0.98"}
                       type="session"
                       active={
@@ -2403,16 +2405,29 @@ export function EvidenceWorkspace({
                             value: snippet.framework || "DSM-5",
                           },
                         ]}
-                        rightAction={
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
-                          >
-                            <ExternalLink size={12} className="mr-1.5" /> Jump
-                            to Spot
-                          </Button>
-                        }
+                          rightAction={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
+                              onClick={() => {
+                                if (snippet.sessionId) {
+                                  // Find the session object
+                                  const session = localSessions.find(s => s.id === snippet.sessionId);
+                                  if (session && onNavigateToSession) {
+                                    onNavigateToSession(session);
+                                  }
+                                } else if (snippet.sourceAssessmentId && onNavigateToAssessments) {
+                                  onNavigateToAssessments(snippet.sourceAssessmentId);
+                                } else if (snippet.sourceDocumentId && onNavigateToDocuments) {
+                                  onNavigateToDocuments(snippet.sourceDocumentId);
+                                }
+                              }}
+                            >
+                              <ExternalLink size={12} className="mr-1.5" /> Jump
+                              to Spot
+                            </Button>
+                          }
                         summary={null}
                       />
                     ),
@@ -2679,6 +2694,18 @@ export function EvidenceWorkspace({
                           variant="outline"
                           size="sm"
                           className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
+                          onClick={() => {
+                             if ((currentItem as any).sessionId) {
+                               const session = localSessions.find(s => s.id === (currentItem as any).sessionId);
+                               if (session && onNavigateToSession) {
+                                 onNavigateToSession(session);
+                               }
+                             } else if ((currentItem as any).sourceAssessmentId && onNavigateToAssessments) {
+                               onNavigateToAssessments((currentItem as any).sourceAssessmentId);
+                             } else if ((currentItem as any).sourceDocumentId && onNavigateToDocuments) {
+                               onNavigateToDocuments((currentItem as any).sourceDocumentId);
+                             }
+                          }}
                         >
                           <ExternalLink size={12} className="mr-1.5" /> Jump to
                           Spot
@@ -2753,7 +2780,11 @@ export function EvidenceWorkspace({
                               variant="outline"
                               size="sm"
                               className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
-                              onClick={() => {}}
+                              onClick={() => {
+                                if (onNavigateToAssessments) {
+                                  onNavigateToAssessments(assessmentDetail.id);
+                                }
+                              }}
                             >
                               View Workspace
                             </Button>
@@ -2913,7 +2944,30 @@ export function EvidenceWorkspace({
                                       variant="outline"
                                       size="sm"
                                       className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
-                                      onClick={() => {}}
+                                      onClick={() => {
+                                        if (finding.sessionId) {
+                                          const session = localSessions.find(
+                                            (s) => s.id === finding.sessionId,
+                                          );
+                                          if (session && onNavigateToSession) {
+                                            onNavigateToSession(session);
+                                          }
+                                        } else if (
+                                          finding.sourceAssessmentId &&
+                                          onNavigateToAssessments
+                                        ) {
+                                          onNavigateToAssessments(
+                                            finding.sourceAssessmentId,
+                                          );
+                                        } else if (
+                                          finding.sourceDocumentId &&
+                                          onNavigateToDocuments
+                                        ) {
+                                          onNavigateToDocuments(
+                                            finding.sourceDocumentId,
+                                          );
+                                        }
+                                      }}
                                     >
                                       <ExternalLink
                                         size={12}
@@ -3037,7 +3091,18 @@ export function EvidenceWorkspace({
                                 variant="outline"
                                 size="sm"
                                 className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
-                                onClick={() => {}}
+                                onClick={() => {
+                                  if (finding.sessionId) {
+                                    const session = localSessions.find(s => s.id === finding.sessionId);
+                                    if (session && onNavigateToSession) {
+                                      onNavigateToSession(session);
+                                    }
+                                  } else if (finding.sourceAssessmentId && onNavigateToAssessments) {
+                                    onNavigateToAssessments(finding.sourceAssessmentId);
+                                  } else if (finding.sourceDocumentId && onNavigateToDocuments) {
+                                    onNavigateToDocuments(finding.sourceDocumentId);
+                                  }
+                                }}
                               >
                                 <ExternalLink size={12} className="mr-1.5" />{" "}
                                 Jump to Spot
@@ -3192,7 +3257,30 @@ export function EvidenceWorkspace({
                                       variant="outline"
                                       size="sm"
                                       className="text-[#06302c] border-[#06302c] hover:bg-[#06302c]/5 whitespace-nowrap h-8"
-                                      onClick={() => {}}
+                                      onClick={() => {
+                                        if (finding.sessionId) {
+                                          const session = localSessions.find(
+                                            (s) => s.id === finding.sessionId,
+                                          );
+                                          if (session && onNavigateToSession) {
+                                            onNavigateToSession(session);
+                                          }
+                                        } else if (
+                                          finding.sourceAssessmentId &&
+                                          onNavigateToAssessments
+                                        ) {
+                                          onNavigateToAssessments(
+                                            finding.sourceAssessmentId,
+                                          );
+                                        } else if (
+                                          finding.sourceDocumentId &&
+                                          onNavigateToDocuments
+                                        ) {
+                                          onNavigateToDocuments(
+                                            finding.sourceDocumentId,
+                                          );
+                                        }
+                                      }}
                                     >
                                       <ExternalLink
                                         size={12}

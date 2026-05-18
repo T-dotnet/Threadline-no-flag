@@ -700,7 +700,7 @@ export function DocumentDetailsScreen({
                           <StatusBadge 
                             status={finding.type || 'uploaded'} 
                             showIcon={false}
-                            label={finding.type === 'behavioural' ? 'Behavioural' : 'EXTRACT'}
+                            label={finding.type === 'behavioural' ? 'BEHAVIOURAL' : 'EXTRACT'}
                             className={finding.type === 'behavioural' ? "bg-emerald-100" : "bg-[#F8E6B2] text-[#5A4A2A]"}
                           />
                           <StatusBadge 

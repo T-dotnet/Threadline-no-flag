@@ -34,7 +34,7 @@ import { SectionHeader } from "@shared/SectionHeader";
 import { cn } from "@lib/utils";
 
 // Domain & Context
-import { MOCK_ASSESSMENTS, MOCK_CLIENT_DATA, MOCK_CLIENTS } from "../mockData";
+import { MOCK_ASSESSMENTS, MOCK_CLIENT_DATA, MOCK_CLIENTS, MOCK_DOCUMENTS } from "../mockData";
 import { deriveClientStatus } from "./ClientListScreen";
 import { FEATURE_FLAGS } from "@/constants/featureFlags";
 import { useAppStore } from "@/services/store";
@@ -367,8 +367,23 @@ function AssessmentListScreenContent({ clientId, onBack }: { clientId: string, o
               <EvidenceWorkspace 
                 clientId={clientId}
                 onViewProfile={() => setActiveTab("Profile")} 
-                onNavigateToAssessments={() => setActiveTab("Assessments")} 
-                onNavigateToDocuments={() => setActiveTab("Documents")}
+                onNavigateToAssessments={(id) => {
+                  if (id) {
+                    setActiveAssessmentId(id);
+                    setSelectedAssessmentIdLocal(id);
+                  }
+                  setActiveTab("Assessments");
+                }} 
+                onNavigateToDocuments={(id) => {
+                  if (id) {
+                    // Try to find the document object by ID or label
+                    const doc = (clientData?.documents || MOCK_DOCUMENTS).find((d: any) => d.id === id || d.name === id);
+                    if (doc) {
+                      setSelectedDocumentLocal(doc);
+                    }
+                  }
+                  setActiveTab("Documents");
+                }}
                 onNavigateToSession={(session) => {
                   setSelectedSessionLocal(session);
                   setActiveTab("Sessions");

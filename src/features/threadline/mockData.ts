@@ -191,7 +191,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "Client Digital Journal", 
     hasConflict: true,
     verbatim: "I felt very anxious today when I had to speak in the meeting. My hands were shaking and I thought everyone could see it.",
-    sessionSource: "Session [S-8821], May 02, 2026"
+    sessionSource: "Clinical Snapshot"
   },
   { 
     label: "Behavioural pattern", 
@@ -201,7 +201,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "School Reports", 
     hasConflict: true,
     verbatim: "Client was fidgeting with a pen and looking down frequently during the social recall task.",
-    sessionSource: "Session [S-8821], May 02, 2026"
+    sessionSource: "Clinical Snapshot"
   },
   { 
     label: "Avoidance Indicator", 
@@ -211,7 +211,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "School Reports", 
     hasConflict: false,
     verbatim: "I often skip lunch in the breakroom to avoid small talk.",
-    sessionSource: "Session [S-8821], May 02, 2026"
+    sessionSource: "Clinical Snapshot"
   },
   { 
     label: "Cognitive Distortion", 
@@ -221,7 +221,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "Client Digital Journal", 
     hasConflict: false,
     verbatim: "If I don't get this right, then everything is a failure.",
-    sessionSource: "Session [S-8822], May 03, 2026"
+    sessionSource: "Cognitive Restructuring"
   },
   { 
     label: "Negative Thought Pattern", 
@@ -231,7 +231,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "Client Digital Journal", 
     hasConflict: false,
     verbatim: "I think everyone is judging how I move and speak.",
-    sessionSource: "Session [S-8822], May 03, 2026"
+    sessionSource: "Cognitive Restructuring"
   },
   { 
     label: "Exposure Result", 
@@ -241,7 +241,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "School Reports", 
     hasConflict: false,
     verbatim: "Successfully maintained eye contact for 30 seconds during roleplay.",
-    sessionSource: "Session [S-8823], May 04, 2026"
+    sessionSource: "Exposure Therapy"
   },
   { 
     label: "Mindfulness Feedback", 
@@ -251,7 +251,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "Letters", 
     hasConflict: false,
     verbatim: "I found it hard to focus on my breath when the room was so quiet.",
-    sessionSource: "Session [S-8823], May 04, 2026"
+    sessionSource: "Exposure Therapy"
   },
   { 
     label: "Verbatim Quote", 
@@ -261,7 +261,7 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "Letters", 
     hasConflict: false,
     verbatim: "It's a burning sensation that radiates down my leg when I've been sitting too long.",
-    sessionSource: "Session [S-8822], May 03, 2026"
+    sessionSource: "Cognitive Restructuring"
   },
   { 
     label: "Mood Symptom", 
@@ -271,24 +271,24 @@ export const MOCK_EVIDENCE_ITEMS = [
     sourceDocumentName: "Letters", 
     hasConflict: false,
     verbatim: "Client reports feeling low most days and lack of energy.",
-    sessionSource: "Session [S-8823], May 04, 2026",
+    sessionSource: "Exposure Therapy",
     cause: "missing_document",
     relevanceCause: "stale_data"
   },
   { label: "Assessment Result", score: "0.95", type: "evidence", hasConflict: false },
-  { label: "PHQ-9 Result Interpretation", score: "0.91", type: "assessment", hasConflict: false, findings: [
+  { label: "PHQ-9 (Patient Health Questionnaire)", score: "0.91", type: "assessment", hasConflict: false, findings: [
     { id: 'f-phq9-1', text: 'Significant impairment in social communication during structured play', timestamp: 'Standardized Score: 85', tags: ['Social'], type: "observation" },
     { id: 'f-phq9-2', text: 'Elevated tactile sensitivity reported on questionnaire', timestamp: 'Sub-scale: Sensory', tags: ['Sensory'], type: "EXTRACT" },
   ] },
-  { label: "GAD-7 Severity Score", score: "0.88", type: "assessment", hasConflict: true, conflictTargetId: "Parent Questionnaire Findings", conflictTargetLabel: "Parent Questionnaire Findings", conflictTargetType: "document", conflictDescription: "The reported anxiety severity indicators in this assessment are significantly lower than observations in the Parent Questionnaire Findings.", findings: [
+  { label: "GAD-7 (Generalized Anxiety Disorder)", score: "0.88", type: "assessment", hasConflict: true, conflictTargetId: "Parent Questionnaire", conflictTargetLabel: "Parent Questionnaire", conflictTargetType: "document", conflictDescription: "The reported anxiety severity indicators in this assessment are significantly lower than observations in the Parent Questionnaire.", findings: [
     { id: 'f-gad7-1', text: 'Frequent excessive worry over workplace responsibilities', timestamp: 'p. 1', tags: ['Environment', 'Emotional'], type: "EXTRACT" }
   ] },
-  { label: "Referral Letter Summary", score: "0.94", type: "document", hasConflict: false, findings: [
+  { label: "School Reports", score: "0.94", type: "document", hasConflict: false, findings: [
     { id: 'f-ref-1', text: 'Observations suggest a pattern of sensory seeking behavior that is particularly evident during structured tasks.', timestamp: 'p. 4', tags: ['Sensory'], type: "observation" },
     { id: 'f-ref-2', text: 'The preschool records indicate that social communication challenge was a primary barrier to peer engagement.', timestamp: 'p. 2', tags: ['Social'], type: "EXTRACT" },
     { id: 'f-ref-3', text: 'Detailed family history collection reveals a positive history for neurodevelopmental conditions, with an immediate family member previously diagnosed with Autism Spectrum Disorder (ASD).', timestamp: 'p. 9', tags: ['Environment'], type: "EXTRACT" },
   ] },
-  { label: "Parent Questionnaire Findings", score: "0.55", type: "document", hasConflict: true, conflictTargetId: "GAD-7 Severity Score", conflictTargetLabel: "GAD-7 Severity Score", conflictTargetType: "assessment", conflictDescription: "Observations in this report indicate high emotional reactivity, which conflicts with the 'GAD-7 Severity Score' assessment.", findings: [
+  { label: "Parent Questionnaire", score: "0.55", type: "document", hasConflict: true, conflictTargetId: "GAD-7 (Generalized Anxiety Disorder)", conflictTargetLabel: "GAD-7 (Generalized Anxiety Disorder)", conflictTargetType: "assessment", conflictDescription: "Observations in this report indicate high emotional reactivity, which conflicts with the 'GAD-7 (Generalized Anxiety Disorder)' assessment.", findings: [
     { id: 'f-parent-1', text: 'Reports of difficulty with transitions', timestamp: 'p. 1', tags: ['Behavioral'] },
   ], relevanceCause: "off_target" },
   { label: "Depressed mood", score: "0.84", type: "criteria", rationale: "Multiple instances of depressed mood and anhedonia reported.", hasConflict: false, status: "Met", tags: ["Emotional", "Behavioral", "Cognitive"], findings: [
