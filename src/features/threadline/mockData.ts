@@ -122,10 +122,10 @@ export const MOCK_CLIENTS = [
 ];
 
 export const MOCK_ASSESSMENTS = [
-  { 
+  {
     id: "a-gad7",
-    title: "GAD-7 (Generalized Anxiety Disorder)", 
-    subtitle: "Feb 10, 2026 • Dr. Sarah Jenkins", 
+    title: "GAD-7 (Generalized Anxiety Disorder)",
+    subtitle: "Feb 10, 2026 • Dr. Sarah Jenkins",
     status: "completed",
     date: "Feb 10, 2026",
     description: "Evaluates the presence and severity of general anxiety symptoms over the past two weeks.",
@@ -135,28 +135,28 @@ export const MOCK_ASSESSMENTS = [
     percentile: "85th",
     descriptor: "Moderate"
   },
-  { 
+  {
     id: "a-phq9",
-    title: "PHQ-9 (Patient Health Questionnaire)", 
-    subtitle: "Mar 15, 2026 • Dr. Mark Ronson", 
+    title: "PHQ-9 (Patient Health Questionnaire)",
+    subtitle: "Mar 15, 2026 • Dr. Mark Ronson",
     status: "in-progress",
     date: "Mar 15, 2026",
     description: "Multipurpose instrument for screening, diagnosing, monitoring and measuring the severity of depression.",
     notes: "Pending review of items 7 and 8 with client during next session."
   },
-  { 
+  {
     id: "a-wai",
-    title: "WAI (Working Alliance Inventory)", 
-    subtitle: "Apr 02, 2026 • Dr. Sarah Jenkins", 
+    title: "WAI (Working Alliance Inventory)",
+    subtitle: "Apr 02, 2026 • Dr. Sarah Jenkins",
     status: "not-started",
     date: "Apr 02, 2026",
     description: "Assesses the therapeutic bond and agreement on therapy goals.",
     notes: "Scheduled for next intake session to establish baseline."
   },
-  { 
+  {
     id: "a-asrs6",
-    title: "ASRS-6 (Adult ADHD Screening)", 
-    subtitle: "Jan 20, 2026 • Dr. Emily Blunt", 
+    title: "ASRS-6 (Adult ADHD Screening)",
+    subtitle: "Jan 20, 2026 • Dr. Emily Blunt",
     status: "completed",
     date: "Jan 20, 2026",
     description: "Screening scale for adult ADHD based on DSM-V criteria.",
@@ -166,10 +166,10 @@ export const MOCK_ASSESSMENTS = [
     percentile: "92nd",
     descriptor: "Significant"
   },
-  { 
+  {
     id: "a-dass21",
-    title: "DASS-21 (Depression Anxiety Stress Scale)", 
-    subtitle: "Scheduled • Dr. Sarah Jenkins", 
+    title: "DASS-21 (Depression Anxiety Stress Scale)",
+    subtitle: "Scheduled • Dr. Sarah Jenkins",
     status: "not-started",
     date: "Apr 10, 2026",
     description: "A set of three self-report scales designed to measure the negative emotional states of depression, anxiety and stress.",
@@ -335,10 +335,10 @@ export const MOCK_MISSING_DOCUMENTS = [
 export const MOCK_CLIENT_DATA: Record<string, {
   reportUnlocked?: boolean,
   allAccepted?: boolean,
-  sessions: { 
-    id?: string, 
-    date: string, 
-    focus: string, 
+  sessions: {
+    id?: string,
+    date: string,
+    focus: string,
     notes: string,
     score?: string,
     relevanceCause?: string,
@@ -354,12 +354,13 @@ export const MOCK_CLIENT_DATA: Record<string, {
       relevanceCause?: string
     }[]
   }[],
-  assessments: { 
-    title: string, 
-    subtitle: string, 
-    status: string, 
-    date?: string, 
-    description?: string, 
+  assessments: {
+    id?: string,
+    title: string,
+    subtitle: string,
+    status: string,
+    date?: string,
+    description?: string,
     notes?: string,
     overallImpression?: string,
     score?: string,
@@ -415,18 +416,20 @@ export const MOCK_CLIENT_DATA: Record<string, {
       }
     ],
     assessments: [
-      { 
-        title: "GAD-7", 
-        subtitle: "Feb 10, 2026 • Dr. Sarah Jenkins", 
+      {
+        id: "a-125566-1",
+        title: "GAD-7",
+        subtitle: "Feb 10, 2026 • Dr. Sarah Jenkins",
         status: "completed",
         overallImpression: "Moderate Anxiety",
         score: "12",
         percentile: "85th",
         descriptor: "Moderate"
       },
-      { 
-        title: "PHQ-9", 
-        subtitle: "Mar 15, 2026 • Dr. Mark Ronson", 
+      {
+        id: "a-125566-2",
+        title: "PHQ-9",
+        subtitle: "Mar 15, 2026 • Dr. Mark Ronson",
         status: "completed",
         overallImpression: "Mild Depression",
         score: "7",
@@ -434,14 +437,15 @@ export const MOCK_CLIENT_DATA: Record<string, {
         descriptor: "Mild"
       },
       {
+        id: "a-125566-3",
         title: "DASS-21",
         subtitle: "Scheduled • Dr. Sarah Jenkins",
         status: "not-started"
       }
     ],
     evidence: [
-      { 
-        type: "Journal", 
+      {
+        type: "Journal",
         description: "Entry regarding social situations.", 
         date: "2026-05-01", 
         label: "Journal Entry", 
@@ -463,9 +467,9 @@ export const MOCK_CLIENT_DATA: Record<string, {
   "125567": {
     sessions: [],
     assessments: [
-      { title: "GAD-7", subtitle: "Scheduled • Dr. Sarah Jenkins", status: "not-started" },
-      { title: "PHQ-9", subtitle: "Scheduled • Dr. Sarah Jenkins", status: "not-started" },
-      { title: "WAI", subtitle: "Scheduled • Dr. Sarah Jenkins", status: "not-started" }
+      { id: "a-125567-1", title: "GAD-7", subtitle: "Scheduled • Dr. Sarah Jenkins", status: "not-started" },
+      { id: "a-125567-2", title: "PHQ-9", subtitle: "Scheduled • Dr. Sarah Jenkins", status: "not-started" },
+      { id: "a-125567-3", title: "WAI", subtitle: "Scheduled • Dr. Sarah Jenkins", status: "not-started" }
     ],
     evidence: [],
     analysis: [],
@@ -488,8 +492,8 @@ export const MOCK_CLIENT_DATA: Record<string, {
       { date: "2026-04-22", focus: "Social Skills", notes: "Roleplay exercise." }
     ],
     assessments: [
-      { title: "ASRS-6", subtitle: "Jan 20, 2026 • Dr. Emily Blunt", status: "completed" },
-      { title: "WAI", subtitle: "Apr 20, 2026 • Dr. Sarah Jenkins", status: "completed" }
+      { id: "a-125569-1", title: "ASRS-6", subtitle: "Jan 20, 2026 • Dr. Emily Blunt", status: "completed" },
+      { id: "a-125569-2", title: "WAI", subtitle: "Apr 20, 2026 • Dr. Sarah Jenkins", status: "completed" }
     ],
     evidence: [{ type: "Focus Log", description: "Tracked productive hours.", date: "2026-04-19" }],
     analysis: [{ thread: "Focus", insight: "Morning productivity is higher." }],
@@ -508,8 +512,8 @@ export const MOCK_CLIENT_DATA: Record<string, {
       { date: "2026-04-22", focus: "Review", notes: "Adjusting goals based on feedback." }
     ],
     assessments: [
-      { title: "WAI", subtitle: "Apr 15, 2026 • Dr. Emily Blunt", status: "completed" },
-      { title: "ASRS-6", subtitle: "Apr 16, 2026 • Dr. Emily Blunt", status: "completed" }
+      { id: "a-125570-1", title: "WAI", subtitle: "Apr 15, 2026 • Dr. Emily Blunt", status: "completed" },
+      { id: "a-125570-2", title: "ASRS-6", subtitle: "Apr 16, 2026 • Dr. Emily Blunt", status: "completed" }
     ],
     evidence: [{ type: "Goal Sheet", description: "Weekly task list.", date: "2026-04-17", label: "Goal Sheet", score: "0.95" }],
     analysis: [{ thread: "Motivation", insight: "Strong internal motivation." }],
@@ -528,8 +532,8 @@ export const MOCK_CLIENT_DATA: Record<string, {
       { id: "SN-2", date: "2026-05-05", focus: "Baseline Assessment", notes: "Reviewing history." }
     ],
     assessments: [
-      { title: "GAD-7", subtitle: "Completed", status: "completed", date: "2026-05-02" },
-      { title: "PHQ-9", subtitle: "Completed", status: "completed", date: "2026-05-03" }
+      { id: "a-125571-1", title: "GAD-7", subtitle: "Completed", status: "completed", date: "2026-05-02" },
+      { id: "a-125571-2", title: "PHQ-9", subtitle: "Completed", status: "completed", date: "2026-05-03" }
     ],
     evidence: [],
     analysis: [],
@@ -547,8 +551,8 @@ export const MOCK_CLIENT_DATA: Record<string, {
       { id: "SO-2", date: "2026-05-05", focus: "Session 2", notes: "Following up." }
     ],
     assessments: [
-      { title: "ASRS-6", subtitle: "Completed", status: "completed", date: "2026-05-02" },
-      { title: "WAI", subtitle: "Completed", status: "completed", date: "2026-05-03" }
+      { id: "a-125572-1", title: "ASRS-6", subtitle: "Completed", status: "completed", date: "2026-05-02" },
+      { id: "a-125572-2", title: "WAI", subtitle: "Completed", status: "completed", date: "2026-05-03" }
     ],
     evidence: [],
     analysis: [],
@@ -593,8 +597,8 @@ export const MOCK_CLIENT_DATA: Record<string, {
       }
     ],
     assessments: [
-      { title: "Parent Social Scale", subtitle: "2025-01-15", status: "completed", score: "Low Concern" },
-      { title: "Teacher Social Scale", subtitle: "2025-06-20", status: "completed", score: "Extremely High Concern" }
+      { id: "a-125573-1", title: "Parent Social Scale", subtitle: "2025-01-15", status: "completed", score: "Low Concern" },
+      { id: "a-125573-2", title: "Teacher Social Scale", subtitle: "2025-06-20", status: "completed", score: "Extremely High Concern" }
     ],
     evidence: [
       { type: "School Report", description: "Teacher observations.", date: "2025-06-20", label: "Contradictory Social Data", score: "0.35", hasConflict: true },
@@ -650,10 +654,10 @@ export const MOCK_CLIENT_DATA: Record<string, {
       }
     ],
     assessments: [
-      { title: "GAD-7", subtitle: "Jan 10, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-01-10", description: "GAD-7 description", notes: "Stable.", overallImpression: "Moderate Anxiety", score: "12", percentile: "75th", descriptor: "Moderate" },
-      { title: "GAD-7", subtitle: "Mar 15, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-03-15", description: "GAD-7 description", notes: "Slight improvement.", overallImpression: "Mild Anxiety", score: "9", percentile: "65th", descriptor: "Mild" },
-      { title: "GAD-7", subtitle: "May 01, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-05-01", description: "GAD-7 description", notes: "Stable.", overallImpression: "Mild Anxiety", score: "8", percentile: "60th", descriptor: "Mild" },
-      { title: "PHQ-9", subtitle: "May 01, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-05-01", description: "PHQ-9 description", notes: "Improving.", overallImpression: "Minimal Depression", score: "4", percentile: "40th", descriptor: "Minimal" }
+      { id: "a-125574-1", title: "GAD-7", subtitle: "Jan 10, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-01-10", description: "GAD-7 description", notes: "Stable.", overallImpression: "Moderate Anxiety", score: "12", percentile: "75th", descriptor: "Moderate" },
+      { id: "a-125574-2", title: "GAD-7", subtitle: "Mar 15, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-03-15", description: "GAD-7 description", notes: "Slight improvement.", overallImpression: "Mild Anxiety", score: "9", percentile: "65th", descriptor: "Mild" },
+      { id: "a-125574-3", title: "GAD-7", subtitle: "May 01, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-05-01", description: "GAD-7 description", notes: "Stable.", overallImpression: "Mild Anxiety", score: "8", percentile: "60th", descriptor: "Mild" },
+      { id: "a-125574-4", title: "PHQ-9", subtitle: "May 01, 2026 • Dr. Sarah Jenkins", status: "completed", date: "2026-05-01", description: "PHQ-9 description", notes: "Improving.", overallImpression: "Minimal Depression", score: "4", percentile: "40th", descriptor: "Minimal" }
     ],
     evidence: [
       { type: "Sleep Log", description: "Tracking sleep efficiency.", date: "2026-05-14", label: "Sleep Pattern", score: "0.95", hasConflict: false }
@@ -692,19 +696,21 @@ export const MOCK_CLIENT_DATA: Record<string, {
       }
     ],
     assessments: [
-      { 
-        title: "Social Communication Checklist", 
-        subtitle: "May 10, 2026 • Teacher", 
-        status: "ready", // Changed to ready to unlock Evidence Workspace
+      {
+        id: "a-125575-1",
+        title: "Social Communication Checklist",
+        subtitle: "May 10, 2026 • Teacher",
+        status: "ready",
         overallImpression: "High Concern",
         score: "Extremely Low",
         percentile: "5th",
         descriptor: "Impaired"
       },
-      { 
-        title: "Adaptive Behavior Scale", 
-        subtitle: "May 12, 2026 • Parent", 
-        status: "ready", // Changed to ready
+      {
+        id: "a-125575-2",
+        title: "Adaptive Behavior Scale",
+        subtitle: "May 12, 2026 • Parent",
+        status: "ready",
         overallImpression: "Moderate Concern",
         score: "Low Average",
         percentile: "16th",
@@ -742,7 +748,7 @@ export const MOCK_CLIENT_DATA: Record<string, {
       }
     ],
     assessments: [
-      { title: "Sensory Profile", subtitle: "May 15, 2026", status: "ready" }
+      { id: "a-125576-1", title: "Sensory Profile", subtitle: "May 15, 2026", status: "ready" }
     ],
     evidence: [
       { type: "Session", description: "Conflict demonstration session", label: "Sensory Conflict", score: "0.85", hasConflict: true, date: "2026-05-15" }

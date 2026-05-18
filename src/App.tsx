@@ -5,6 +5,7 @@
 
 import { useState } from "react";
 import { Routes, Route, useNavigate, useLocation, Navigate, useParams } from "react-router-dom";
+import { useClinicalStore } from "./services/store";
 import { AnimatePresence, motion } from "motion/react";
 import { X as CloseIcon } from "lucide-react";
 
@@ -28,7 +29,6 @@ import { Button } from "@ui/index";
 
 // Context & Types
 import { Condition } from "./types";
-import { ALL_CONDITIONS } from "./constants";
 import { MOCK_CLIENTS, MOCK_CLIENT_DATA } from "./features/threadline/mockData";
 
 export default function App() {
@@ -40,7 +40,7 @@ export default function App() {
 function AppContent() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [conditions, setConditions] = useState<Condition[]>(() => [...ALL_CONDITIONS]);
+  const { conditions, addCondition } = useClinicalStore();
   const [showMockData, setShowMockData] = useState(false);
   const [isAdminView, setIsAdminView] = useState(false);
   const [isDebugMinimized, setIsDebugMinimized] = useState(true);
@@ -59,7 +59,7 @@ function AppContent() {
       overview: "Newly created condition guideline.",
       refs: []
     };
-    setConditions([newCondition, ...conditions]);
+    addCondition(newCondition);
   };
 
   const getActiveItem = () => {

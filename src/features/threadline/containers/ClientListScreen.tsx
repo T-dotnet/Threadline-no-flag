@@ -93,9 +93,9 @@ export function ClientListScreen({ onSelectClient }: ClientListScreenProps) {
             onChange={(e) => setClinicianFilter(e.target.value)}
           >
             <option value="All Clinicians">All Clinicians</option>
-            <option value="James Wilson">James Wilson</option>
-            <option value="Sara Miller">Sara Miller</option>
-            <option value="Olivia Porter">Olivia Porter</option>
+            <option value="Dr. Sarah Jenkins">Dr. Sarah Jenkins</option>
+            <option value="Dr. Mark Ronson">Dr. Mark Ronson</option>
+            <option value="Dr. Emily Blunt">Dr. Emily Blunt</option>
           </Select>
         </div>
 
