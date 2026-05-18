@@ -110,8 +110,8 @@ export function SessionListWorkspace({
 
         <div className="relative w-full md:w-[320px]">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" size={18} />
-          <Input
-            placeholder="Search sessions..."
+          <Input 
+            placeholder="Search sessions..." 
             className="pl-10"
           />
         </div>

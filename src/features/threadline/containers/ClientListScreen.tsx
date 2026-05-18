@@ -4,18 +4,18 @@
  */
 
 import { useState, useMemo } from "react";
-import { Plus, MoreVertical, ChevronDown } from "lucide-react";
+import { Search, Plus, MoreVertical, ChevronDown } from "lucide-react";
 
 // UI & Layout
-import {
-  Button,
-  Badge,
-  Card,
-  Typography,
-  Select,
-  TableFooter
+import { 
+  Button, 
+  Badge, 
+  Card, 
+  Typography, 
+  Input, 
+  Select, 
+  TableFooter 
 } from "../../../components/ui";
-import { SearchInput } from "../components/SearchInput";
 import { StatusBadge } from "../../../components/shared/StatusBadge";
 import { WorkspaceLayout } from "../../../components/layout/WorkspaceLayout";
 import { AddClientModal } from "../modals/AddClientModal";
@@ -99,12 +99,15 @@ export function ClientListScreen({ onSelectClient }: ClientListScreenProps) {
           </Select>
         </div>
 
-        <SearchInput
-          placeholder="Search by name, Referral, or ID"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full sm:w-[320px]"
-        />
+        <div className="relative w-full sm:w-[320px]">
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-secondary pointer-events-none" />
+          <Input 
+            placeholder="Search by name, Referral, or ID" 
+            className="pl-10"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
       </div>
 
       {/* Table */}

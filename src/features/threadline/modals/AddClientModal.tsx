@@ -1,12 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { User, Phone, Mail, Hash, UserPlus, ShieldCheck, Plus } from "lucide-react";
 import { Modal, Input, Select } from "@ui/index";
 import { ModalHeader } from "./shared/ModalHeader";
 import { ModalFooter } from "./shared/ModalFooter";
 import { FormSection } from "./shared/FormSection";
 import { FormField } from "./shared/FormField";
-import { useFormState } from "../hooks/useFormState";
-import { CONSENT_OPTIONS } from "./constants";
 
 interface AddClientModalProps {
   isOpen: boolean;
@@ -14,10 +12,19 @@ interface AddClientModalProps {
   onAdd: (client: any) => void;
 }
 
-const INITIAL_FORM = { name: "", externalId: "", phone: "", email: "", referredBy: "", consentObtained: "Pending" };
-
 export function AddClientModal({ isOpen, onClose, onAdd }: AddClientModalProps) {
-  const { data: formData, handleChange, reset } = useFormState(INITIAL_FORM);
+  const [formData, setFormData] = useState({
+    name: "",
+    externalId: "",
+    phone: "",
+    email: "",
+    referredBy: "",
+    consentObtained: "Pending",
+  });
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleAdd = () => {
     if (formData.name) {
@@ -25,10 +32,24 @@ export function AddClientModal({ isOpen, onClose, onAdd }: AddClientModalProps) 
         ...formData,
         id: formData.externalId || Math.random().toString(36).substr(2, 9),
       });
-      reset();
+      setFormData({
+        name: "",
+        externalId: "",
+        phone: "",
+        email: "",
+        referredBy: "",
+        consentObtained: "Pending",
+      });
       onClose();
     }
   };
+
+  const consentOptions = [
+    { label: "Pending", value: "Pending" },
+    { label: "Yes (Digital)", value: "Yes (Digital)" },
+    { label: "Yes (Physical Copy)", value: "Yes (Physical Copy)" },
+    { label: "Declined", value: "Declined" },
+  ];
 
   return (
     <Modal
@@ -100,7 +121,7 @@ export function AddClientModal({ isOpen, onClose, onAdd }: AddClientModalProps) 
               onChange={(e) => handleChange('consentObtained', e.target.value)}
               className="h-11 w-full"
             >
-              {CONSENT_OPTIONS.map(opt => (
+              {consentOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </Select>

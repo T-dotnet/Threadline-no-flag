@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { ChevronDown, ClipboardCheck } from "lucide-react";
+import { 
+  Search,
+  ChevronDown,
+  ClipboardCheck
+} from "lucide-react";
 import { DIVIDER, TYPE_SCALE, TEXT_PRIMARY, TEXT_SECONDARY, h1Style, subStyle } from "../constants";
 import { MOCK_CLIENTS, MOCK_CLIENT_DATA } from "../mockData";
-import { Button, Card, Typography, TableFooter } from "@ui/index";
-import { usePagination } from "../hooks/usePagination";
-import { SearchInput } from "../components/SearchInput";
+import { Button, Card, Typography, Input, TableFooter } from "@ui/index";
 import { StatusBadge } from "@shared/StatusBadge";
 import { WorkspaceLayout } from "@components/layout/WorkspaceLayout";
 import { cn } from "@lib/utils";
@@ -31,24 +33,25 @@ export function MainAssessmentListWorkspace() {
     }));
   });
 
-  const filtered = allAssessments.filter(a =>
-    a.clientName.toLowerCase().includes(search.toLowerCase()) ||
+  const filtered = allAssessments.filter(a => 
+    a.clientName.toLowerCase().includes(search.toLowerCase()) || 
     a.title.toLowerCase().includes(search.toLowerCase()) ||
     a.leadClinician.toLowerCase().includes(search.toLowerCase())
   );
-
-  const { page, setPage, rpp, setRpp, pagedItems, total, s, e } = usePagination(filtered);
 
   const mainContent = (
     <div className="flex flex-col h-full">
       {/* Table Controls (Search) */}
       <div className="flex justify-end p-6 bg-gray-50/30 border-b border-divider">
-        <SearchInput
-          placeholder="Search by Clients, Clinicians, or Assessments..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-[360px]"
-        />
+        <div className="relative w-[360px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" size={18} />
+          <Input 
+            placeholder="Search by Clients, Clinicians, or Assessments..." 
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-10"
+          />
+        </div>
       </div>
 
       {/* Table Body */}
@@ -61,7 +64,7 @@ export function MainAssessmentListWorkspace() {
           <div className="text-right"><Typography variant="label-micro" className="uppercase font-bold text-text-secondary">Action</Typography></div>
         </div>
 
-        {pagedItems.map((assessment, i) => {
+        {filtered.map((assessment, i) => {
           return (
             <div key={i} className={cn(
               "grid grid-cols-[1.5fr_1fr_0.8fr_1fr_0.6fr] px-6 py-6 items-center transition-colors hover:bg-gray-50/50 group",
@@ -158,14 +161,14 @@ export function MainAssessmentListWorkspace() {
 
       {/* Pagination Footer */}
       <div className="px-6 py-4 border-t border-divider bg-gray-50/30">
-          <TableFooter
-            page={page}
-            setPage={setPage}
-            rpp={rpp}
-            setRpp={setRpp}
-            total={total}
-            s={s}
-            e={e}
+          <TableFooter 
+            page={0}
+            setPage={() => {}}
+            rpp={10}
+            setRpp={() => {}}
+            total={Math.ceil(filtered.length / 10)}
+            s={1}
+            e={Math.min(10, filtered.length)}
             count={filtered.length}
           />
       </div>

@@ -7,7 +7,6 @@ import React, { useState, useEffect } from "react";
 import { Plus, X } from "lucide-react";
 import { Modal, Typography, SearchableSelect, Button, Input, Select, Textarea } from "@ui/index";
 import { COMMON_FRAMEWORKS, COMMON_TAGS, CLINICAL_STATUSES, CLINICAL_FOCUS_OPTIONS, IMPACT_OPTIONS, GLOBAL_FINDINGS_POOL } from "./constants";
-import { evidenceTypeClass } from "../utils/evidenceUtils";
 import { EvidencePickerModal } from "./EvidencePickerModal";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 
@@ -300,7 +299,13 @@ export function ModifyModal({
                         </Typography>
                         <div className="flex items-center justify-between mt-3">
                           <div className="flex items-center gap-2">
-                             <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-tight ${evidenceTypeClass(f.type)}`}>
+                             <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-tight ${
+                              f.type === 'verbatim' ? 'bg-secondary-focus text-secondary-focus-text' :
+                              f.type === 'behavioural' ? 'bg-secondary-balance text-secondary-balance-text' :
+                              f.type === 'extract' ? 'bg-secondary-connection text-secondary-connection-text' :
+                              f.type === 'observation' ? 'bg-secondary-sleep text-secondary-sleep-text' :
+                              'bg-slate-100 text-slate-500'
+                            }`}>
                               {f.type || 'finding'}
                             </div>
                             <div className="flex items-center gap-1.5 px-2 py-0.5 bg-slate-100/50 rounded text-[9px] font-bold text-slate-400 uppercase tracking-tight">

@@ -29,6 +29,7 @@ import {
   Share2,
   FileText,
   Plus,
+  Search,
 } from "lucide-react";
 import { MOCK_CHANGE_LOG, ChangeLogEntry } from "../mockChangeLog";
 import { cn } from "@lib/utils";
@@ -36,7 +37,6 @@ import { WorkspaceLayout } from "@components/layout/WorkspaceLayout";
 import { ModalHeader } from "../modals/shared/ModalHeader";
 import { ModalFooter } from "../modals/shared/ModalFooter";
 import { EntityCard } from "../components/EntityCard";
-import { SearchInput } from "../components/SearchInput";
 
 export function ChangeLogWorkspace() {
   const [selectedEntry, setSelectedEntry] = useState<ChangeLogEntry | null>(
@@ -123,12 +123,21 @@ export function ChangeLogWorkspace() {
           ))}
         </div>
 
-        <SearchInput
-          placeholder="Search logs..."
-          value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(0); }}
-          className="w-full md:w-[320px]"
-        />
+        <div className="relative w-full md:w-[320px]">
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled"
+          />
+          <input
+            placeholder="Search logs..."
+            className="w-full pl-10 pr-4 h-10 border border-divider rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 text-sm"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(0);
+            }}
+          />
+        </div>
       </div>
 
       {/* Table Content */}

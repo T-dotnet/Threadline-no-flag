@@ -11,12 +11,6 @@ import {
   MOCK_DOCUMENTS, 
 } from "../features/threadline/mockData";
 
-function deriveLifecycleState(status: string): 'created' | 'in-progress' | 'completed' {
-  if (status === 'ready') return 'in-progress';
-  if (status === 'Review Pass') return 'completed';
-  return 'created';
-}
-
 export function initStoreFromMockData() {
   const clinicalStore = useClinicalStore.getState();
   
@@ -60,7 +54,7 @@ export function initStoreFromMockData() {
       score: a.score,
       percentile: a.percentile,
       descriptor: a.descriptor,
-      lifecycleState: deriveLifecycleState(a.status || ""),
+      lifecycleState: (a.status === "ready" ? "in-progress" : (a.status === "Review Pass" ? "completed" : "created")) as any,
       reviewedSections: [],
       reportApproved: false
     }));
@@ -88,7 +82,7 @@ export function initStoreFromMockData() {
       version: d.version || "v1.0",
       uploadedAt: new Date().toISOString()
     }));
-    clinicalStore.setDocuments(client.id, documents);
+    documents.forEach((d: any) => clinicalStore.addDocument(client.id, d));
   });
 
   console.info("PERSISTENCE: Seed complete.");

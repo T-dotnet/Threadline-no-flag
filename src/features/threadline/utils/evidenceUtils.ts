@@ -1,14 +1,3 @@
-const EVIDENCE_TYPE_CLASS: Record<string, string> = {
-  verbatim: 'bg-secondary-focus text-secondary-focus-text',
-  behavioural: 'bg-secondary-balance text-secondary-balance-text',
-  observation: 'bg-secondary-sleep text-secondary-sleep-text',
-  extract: 'bg-secondary-connection text-secondary-connection-text',
-};
-
-export function evidenceTypeClass(type?: string): string {
-  return EVIDENCE_TYPE_CLASS[type?.toLowerCase() ?? ''] ?? 'bg-slate-100 text-slate-500';
-}
-
 export const getEvidenceBadgeProps = (
   type?: string,
   status?: string,

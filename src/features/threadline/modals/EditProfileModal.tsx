@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { User, Phone, Mail, Hash, UserPlus, ShieldCheck, Save } from "lucide-react";
-import { Modal, Input, Select } from "@ui/index";
+import { User, Phone, Mail, Hash, UserPlus, ShieldCheck, Save, X } from "lucide-react";
+import { Modal, Button, Input, Select } from "@ui/index";
 import { ModalHeader } from "./shared/ModalHeader";
 import { ModalFooter } from "./shared/ModalFooter";
 import { FormSection } from "./shared/FormSection";
 import { FormField } from "./shared/FormField";
-import { CONSENT_OPTIONS } from "./constants";
+import { cn } from "@lib/utils";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -38,6 +38,13 @@ export function EditProfileModal({ isOpen, onClose, onSave, initialData }: EditP
     onSave(formData);
     onClose();
   };
+
+  const consentOptions = [
+    { label: "Yes (Digital)", value: "Yes (Digital)" },
+    { label: "Yes (Physical Copy)", value: "Yes (Physical Copy)" },
+    { label: "Pending", value: "Pending" },
+    { label: "Declined", value: "Declined" },
+  ];
 
   return (
     <Modal
@@ -108,7 +115,7 @@ export function EditProfileModal({ isOpen, onClose, onSave, initialData }: EditP
               onChange={(e) => handleChange('consentObtained', e.target.value)}
               className="h-11 w-full"
             >
-              {CONSENT_OPTIONS.map(opt => (
+              {consentOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </Select>
