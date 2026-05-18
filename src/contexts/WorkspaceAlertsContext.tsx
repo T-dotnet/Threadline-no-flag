@@ -66,7 +66,6 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
   const [acceptedMappings, setAcceptedMappings] = useState<MappingItem[]>([]);
   
   const [hypothesisSubmitted, setHypothesisSubmitted] = useState(false);
-  const [hypothesisSubmittedAt, setHypothesisSubmittedAt] = useState<string | null>(null);
   const [isDeferred, setIsDeferred] = useState(false);
   const [impressionFormulated, setImpressionFormulated] = useState(false);
   const [reportApproved, setReportApproved] = useState(false);
@@ -86,7 +85,6 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     setLowConfidenceMappings([]);
     setAcceptedMappings([]);
     setHypothesisSubmitted(false);
-    setHypothesisSubmittedAt(null);
     setIsDeferred(false);
     setImpressionFormulated(false);
     setReportApproved(false);
@@ -107,12 +105,16 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     } else if (hypothesisSubmitted) {
       targetStep = 4;
     } else if (conflicts.length === 0 && acceptedMappings.length > 0) {
-      targetStep = 3; // Conflict Resolution — all conflicts resolved, items evaluated
-    } else if (acceptedMappings.length > 0 && conflicts.length > 0) {
-      targetStep = 2; // Reliability Evaluation — items accepted but conflicts still unresolved
+      targetStep = 3;
+    } else if (acceptedMappings.length > 0) {
+      targetStep = 2;
     } else {
-      targetStep = 1; // Evidence Review — no items accepted yet
+      targetStep = 1;
     }
+
+    // Step 2 is effectively "Reliability Evaluation" - we are in it if we have at least one accepted item 
+    // but haven't resolved all conflicts yet.
+    // Step 3 is "Conflict Resolution" - we are in it once all conflicts are resolved.
 
     if (targetStep > currentStep) {
       const now = new Date().toISOString();
@@ -139,13 +141,33 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     currentStep, activeAssessmentId, activeClientId
   ]);
 
+  // PERSISTENCE: Load state from store on assessment/client change
+  useEffect(() => {
+    if (!activeClientId || !activeAssessmentId) return;
+    
+    const loop = clinicalStore.getCognitiveLoop(activeClientId, activeAssessmentId);
+    if (loop) {
+      setHypothesisSubmitted(!!loop.hypothesisText || !!loop.hypothesisSubmittedAt);
+      setIsDeferred(loop.isDeferred);
+      setImpressionFormulated(loop.impressionFormulated);
+      setReportApproved(loop.reportApproved);
+      setCurrentStep(loop.currentStep);
+      setAcceptedMappings(loop.acceptedMappings || []);
+      if (loop.conflicts && loop.conflicts.length > 0) {
+        setConflicts(loop.conflicts);
+      }
+      if (loop.missingDocuments && loop.missingDocuments.length > 0) {
+        setMissingDocuments(loop.missingDocuments);
+      }
+    }
+  }, [activeClientId, activeAssessmentId]);
+
   // PERSISTENCE: Record transitions and status updates to store
   useEffect(() => {
     if (!activeClientId || !activeAssessmentId) return;
-
+    
     clinicalStore.updateCognitiveLoop(activeClientId, activeAssessmentId, {
       currentStep,
-      hypothesisSubmittedAt,
       impressionFormulated,
       isDeferred,
       reportApproved,
@@ -153,35 +175,34 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
       conflicts,
       missingDocuments
     });
-  }, [currentStep, hypothesisSubmitted, hypothesisSubmittedAt, impressionFormulated, isDeferred, reportApproved, acceptedMappings, conflicts, missingDocuments]);
+  }, [currentStep, hypothesisSubmitted, impressionFormulated, isDeferred, reportApproved, acceptedMappings, conflicts, missingDocuments]);
 
-  // Reset and reload when client or assessment changes.
-  // Order matters: seed from mock first, then overlay with persisted store data so the
-  // store always wins — previously the two effects ran in sequence and the reset effect
-  // fired after the load effect, discarding persisted state.
+  // Reset when assessment or client changes
   useEffect(() => {
     clearAlerts();
-    if (!activeClientId) return;
-
+    
     if (FEATURE_FLAGS.FEATURE_WORKSPACE_ALERTS_CONTEXT) {
-      // Step 1: Seed baseline from mock data
-      const clientData = (MOCK_CLIENT_DATA as any)[activeClientId];
+      const clientData = activeClientId ? (MOCK_CLIENT_DATA as any)[activeClientId] : null;
+      
       if (clientData) {
         setConflicts(clientData.conflicts || []);
         setMissingDocuments(clientData.missingDocuments || []);
-
-        const evidenceToUse = (clientData.evidence && clientData.evidence.length > 0)
-          ? clientData.evidence
+        
+        // Use evidence from client data for low confidence check if available, otherwise fallback
+        const evidenceToUse = (clientData.evidence && clientData.evidence.length > 0) 
+          ? clientData.evidence 
           : MOCK_EVIDENCE_ITEMS;
+
         setLowConfidenceMappings(
           evidenceToUse
             .filter((i: any) => {
-              const s = i.score || "0";
-              return !isNaN(parseFloat(s)) && parseFloat(s) < FEATURE_CONFIDENCE_THRESHOLD;
+               const s = i.score || "0";
+               return !isNaN(parseFloat(s)) && parseFloat(s) < FEATURE_CONFIDENCE_THRESHOLD;
             })
             .map((i: any) => ({ id: i.label || i.type, label: i.label || i.type, confidence: parseFloat(i.score || "0") }))
         );
       } else {
+        // Fallback for legacy behavior if no specific client data found
         setConflicts(MOCK_CONFLICTS);
         setMissingDocuments(MOCK_MISSING_DOCUMENTS);
         setLowConfidenceMappings(
@@ -189,24 +210,6 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
             .filter(i => !isNaN(parseFloat(i.score)) && parseFloat(i.score) < FEATURE_CONFIDENCE_THRESHOLD)
             .map(i => ({ id: i.label, label: i.label, confidence: parseFloat(i.score) }))
         );
-      }
-    }
-
-    // Step 2: Overlay with persisted store data — store takes precedence over mock baseline
-    if (activeAssessmentId) {
-      const key = `${activeClientId}:${activeAssessmentId}`;
-      const loop = clinicalStore.cognitiveLoops[key];
-      if (loop) {
-        const wasSubmitted = !!loop.hypothesisText || !!loop.hypothesisSubmittedAt;
-        setHypothesisSubmitted(wasSubmitted);
-        setHypothesisSubmittedAt(loop.hypothesisSubmittedAt ?? null);
-        setIsDeferred(loop.isDeferred);
-        setImpressionFormulated(loop.impressionFormulated);
-        setReportApproved(loop.reportApproved);
-        setCurrentStep(loop.currentStep);
-        setAcceptedMappings(loop.acceptedMappings || []);
-        if (loop.conflicts && loop.conflicts.length > 0) setConflicts(loop.conflicts);
-        if (loop.missingDocuments && loop.missingDocuments.length > 0) setMissingDocuments(loop.missingDocuments);
       }
     }
   }, [activeAssessmentId, activeClientId]);
@@ -226,13 +229,7 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     setMissingDocuments: (d: MissingDocItem[]) => isEnabled && setMissingDocuments(d),
     setLowConfidenceMappings: (m: MappingItem[]) => isEnabled && setLowConfidenceMappings(m),
     setAcceptedMappings: (m: MappingItem[]) => isEnabled && setAcceptedMappings(m),
-    setHypothesisSubmitted: (v: boolean) => {
-      if (!isEnabled) return;
-      setHypothesisSubmitted(v);
-      // Record timestamp on first submission; clear on reset
-      if (v) setHypothesisSubmittedAt(prev => prev ?? new Date().toISOString());
-      else setHypothesisSubmittedAt(null);
-    },
+    setHypothesisSubmitted: (v: boolean) => isEnabled && setHypothesisSubmitted(v),
     setIsDeferred: (v: boolean) => isEnabled && setIsDeferred(v),
     setImpressionFormulated: (v: boolean) => isEnabled && setImpressionFormulated(v),
     setReportApproved: (v: boolean) => isEnabled && setReportApproved(v),

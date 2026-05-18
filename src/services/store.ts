@@ -1,6 +1,5 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Condition } from '../types';
 
 // --- Types from original localStore.ts ---
 
@@ -13,8 +12,6 @@ export interface ClientRecord {
   consent: boolean;
   hasConflicts: boolean;
   missingDocs: string[];
-  phone?: string;
-  email?: string;
   clinicalNotes: {
     author: string;
     timestamp: string;
@@ -142,8 +139,7 @@ interface ClinicalState {
   sessions: Record<string, SessionRecord[]>; // clientId -> sessions
   documents: Record<string, DocumentRecord[]>; // clientId -> documents
   cognitiveLoops: Record<string, CognitiveLoopRecord>; // clientId:assessmentId -> loop
-  conditions: Condition[];
-
+  
   // Actions
   setClients: (clients: ClientRecord[]) => void;
   updateAssessment: (clientId: string, assessmentId: string, patch: Partial<AssessmentRecord>) => void;
@@ -153,10 +149,8 @@ interface ClinicalState {
   setSessions: (clientId: string, sessions: SessionRecord[]) => void;
   addDocument: (clientId: string, doc: DocumentRecord) => void;
   updateCognitiveLoop: (clientId: string, assessmentId: string, patch: Partial<CognitiveLoopRecord>) => void;
-  setConditions: (conditions: Condition[]) => void;
-  addCondition: (condition: Condition) => void;
   resetStore: () => void;
-
+  
   // Getters (convenience helpers to use in selectors)
   getAssessments: (clientId: string) => AssessmentRecord[];
   getEvidenceDecisions: (clientId: string, assessmentId: string) => EvidenceDecisionStore;
@@ -174,13 +168,8 @@ export const useClinicalStore = create<ClinicalState>()(
       sessions: {},
       documents: {},
       cognitiveLoops: {},
-      conditions: [],
 
       setClients: (clients) => set({ clients }),
-      setConditions: (conditions) => set({ conditions }),
-      addCondition: (condition) => set((state) => ({
-        conditions: [condition, ...state.conditions]
-      })),
       
       setAssessments: (clientId, assessments) => set((state) => ({
         assessments: { ...state.assessments, [clientId]: assessments }
@@ -292,7 +281,6 @@ export const useClinicalStore = create<ClinicalState>()(
           sessions: {},
           documents: {},
           cognitiveLoops: {},
-          // conditions are user/system data — preserve them across resets
         };
       }),
     }),

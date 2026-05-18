@@ -7,7 +7,6 @@ import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Toast } from "@ui/index";
 import { MOCK_EVIDENCE_ITEMS } from "../mockData";
-import { useAppStore, useClinicalStore } from "@/services/store";
 import { AddEvidenceTypeModal } from "./AddEvidenceTypeModal";
 import { ModifyModal } from "./ModifyModal";
 import { CreateSessionModal } from "./CreateSessionModal";
@@ -18,8 +17,6 @@ import { CognitiveLoopModal } from "./CognitiveLoopModal";
 
 export function GlobalModals() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { activeClientId, activeAssessmentId } = useAppStore();
-  const clinicalStore = useClinicalStore();
   const modalType = searchParams.get("modal");
   const itemId = searchParams.get("itemId");
   const [showToast, setShowToast] = useState(false);
@@ -47,22 +44,15 @@ export function GlobalModals() {
   };
 
   const handleSave = (updatedData: any) => {
-    // Persist modification to the evidence decision store
-    if (activeClientId && activeAssessmentId && itemId) {
-      const existing = clinicalStore.getEvidenceDecisions(activeClientId, activeAssessmentId);
-      const now = new Date().toISOString();
-      const existingIdx = existing.modifiedItems.findIndex(m => m.id === itemId);
-      const modifiedItems = existingIdx >= 0
-        ? existing.modifiedItems.map((m, i) =>
-            i === existingIdx ? { ...m, newValue: updatedData, timestamp: now } : m
-          )
-        : [...existing.modifiedItems, { id: itemId, originalValue: realItem, newValue: updatedData, timestamp: now }];
-      clinicalStore.setEvidenceDecisions(activeClientId, activeAssessmentId, { ...existing, modifiedItems });
-    }
-
+    console.log("Saving item changes:", updatedData);
+    // In a real app, we would call a service to update the item
     setShowToast(true);
-    closeModal();
-    setTimeout(() => setShowToast(false), 2500);
+    closeModal(); // Close the modal immediately
+    
+    // Auto-hide toast after delay
+    setTimeout(() => {
+      setShowToast(false);
+    }, 2500);
   };
 
   const handleAddEvidenceSelect = (type: string) => {

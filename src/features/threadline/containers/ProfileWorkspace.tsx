@@ -20,16 +20,16 @@ export function ProfileWorkspace() {
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: clientMeta?.name || "",
-    externalId: clientMeta?.extId || "",
-    phone: "",
-    referredBy: clientMeta?.ref || "",
-    consentObtained: clientMeta?.consent ? "Yes (Digital)" : "Pending",
-    email: "",
-    lastSession: "—",
+    name: clientMeta?.name || "Liam O'Sullivan",
+    externalId: activeClientId || "125566",
+    phone: "+61 412 345 678",
+    referredBy: "Dr. Alicia Smith",
+    consentObtained: "Yes (Digital)",
+    email: "liam.osullivan@example.com",
+    lastSession: "19/03/2025",
   });
 
-  // PERSISTENCE: Initial load — read phone/email/extId from store
+  // PERSISTENCE: Initial load
   useEffect(() => {
     if (!activeClientId) return;
     const clients = clinicalStore.getClients();
@@ -37,12 +37,12 @@ export function ProfileWorkspace() {
     if (client) {
       setProfileData({
         name: client.name,
-        externalId: client.extId,
-        phone: client.phone || "",
+        externalId: client.id,
+        phone: "+61 412 345 678",
         referredBy: client.ref || "",
         consentObtained: client.consent ? "Yes (Digital)" : "Pending",
-        email: client.email || "",
-        lastSession: "—",
+        email: "liam.osullivan@example.com",
+        lastSession: "19/03/2025",
       });
     }
   }, [activeClientId]);
@@ -59,8 +59,6 @@ export function ProfileWorkspace() {
               name: newData.name,
               ref: newData.referredBy,
               consent: newData.consentObtained?.includes("Yes"),
-              phone: newData.phone,
-              email: newData.email,
             }
           : c,
       );
