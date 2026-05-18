@@ -37,7 +37,7 @@ import { cn } from "@lib/utils";
 import { MOCK_ASSESSMENTS, MOCK_CLIENT_DATA, MOCK_CLIENTS, MOCK_DOCUMENTS } from "../mockData";
 import { deriveClientStatus } from "./ClientListScreen";
 import { FEATURE_FLAGS } from "@/constants/featureFlags";
-import { useAppStore } from "@/services/store";
+import { useAppStore, useClinicalStore } from "@/services/store";
 import { WorkspaceAlertsProvider, useWorkspaceAlerts } from "@/contexts/WorkspaceAlertsContext";
 
 // Components
@@ -67,6 +67,7 @@ import { UpdatesBanner, UpdateItem } from "../components/UpdatesBanner";
 
 function AssessmentListScreenContent({ clientId, onBack }: { clientId: string, onBack: () => void }) {
   const { setActiveAssessmentId, useGroupedTabs, setActiveClientId } = useAppStore();
+  const clinicalStore = useClinicalStore();
   const { conflicts, missingDocuments, lowConfidenceMappings } = useWorkspaceAlerts();
   
   const [activeTab, setActiveTab] = useState("Profile");
@@ -149,12 +150,16 @@ function AssessmentListScreenContent({ clientId, onBack }: { clientId: string, o
   const derivedStatus = clientMeta ? deriveClientStatus(clientMeta) : "idle";
   const status = forceStatusReady ? "ready" : derivedStatus;
 
-  // Clinical Unlock Logic (Requirement: 2 Sessions, 2 Completed Assessments, 2 Uploaded Documents)
-  const sessionsCount = clientData?.sessions?.length || 0;
+  // Clinical Unlock Logic — read from store so user actions (add session, upload doc) are reflected
+  const storeSessions = clinicalStore.sessions[clientId] || [];
+  const storeAssessments = clinicalStore.getAssessments(clientId);
+  const storeDocuments = clinicalStore.getDocuments(clientId);
+
+  const sessionsCount = storeSessions.length;
   const sessionsMet = sessionsCount >= 2;
-  const assessmentsCount = clientData?.assessments?.filter((a: any) => a.status.toLowerCase() === 'completed').length || 0;
+  const assessmentsCount = storeAssessments.filter(a => a.status.toLowerCase() === 'completed').length;
   const assessmentsMet = assessmentsCount >= 2;
-  const documentsCount = clientData?.documents?.filter((d: any) => d.status === 'uploaded' || d.status === 'completed').length || 0;
+  const documentsCount = storeDocuments.filter(d => d.status.toLowerCase() === 'uploaded').length;
   const documentsMet = documentsCount >= 2;
   
   const currentProgress = Math.min(sessionsCount, 2) + Math.min(assessmentsCount, 2) + Math.min(documentsCount, 2);
@@ -230,7 +235,10 @@ function AssessmentListScreenContent({ clientId, onBack }: { clientId: string, o
     );
   };
 
-  const assessments = clientData?.assessments || MOCK_ASSESSMENTS;
+  // Prefer store assessments (reflect user actions); fall back to mock then generic defaults
+  const assessments = storeAssessments.length > 0
+    ? storeAssessments
+    : (clientData?.assessments || MOCK_ASSESSMENTS);
   const filtered = assessments.filter((a: any) => a.title.toLowerCase().includes(search.toLowerCase()));
 
   const handleViewResult = (id?: string) => {
@@ -462,12 +470,12 @@ function AssessmentListScreenContent({ clientId, onBack }: { clientId: string, o
                       ) : (
                         <div className="grid grid-cols-1 gap-6">
                           {filtered.map((a, i) => (
-                            <AssessmentCard 
-                              key={i} 
-                              title={a.title} 
-                              subtitle={a.subtitle} 
-                              status={a.status} 
-                              onViewResult={() => handleViewResult(String(i))} 
+                            <AssessmentCard
+                              key={(a as any).id || i}
+                              title={a.title}
+                              subtitle={a.subtitle}
+                              status={a.status}
+                              onViewResult={() => handleViewResult((a as any).id || String(i))}
                               onShare={() => {
                                 setSharingAssessmentTitle(a.title);
                                 setIsShareModalOpen(true);

@@ -26,8 +26,8 @@ export function initStoreFromMockData() {
   const clients = MOCK_CLIENTS.map(c => ({
     id: c.id,
     name: c.name,
-    extId: c.id,
-    clinicians: ["Primary Clinician"],
+    extId: c.extId,
+    clinicians: c.clinicians,
     ref: "Dr. Smith",
     consent: !!c.consent,
     hasConflicts: !!(MOCK_CLIENT_DATA as any)[c.id]?.conflicts?.length,
@@ -42,8 +42,8 @@ export function initStoreFromMockData() {
     const clientSpecificData = (MOCK_CLIENT_DATA as any)[client.id];
     
     // Assessments
-    const assessments = (clientSpecificData?.assessments || MOCK_ASSESSMENTS).map((a: any) => ({
-      id: a.id,
+    const assessments = (clientSpecificData?.assessments || MOCK_ASSESSMENTS).map((a: any, idx: number) => ({
+      id: a.id || `asmt-${client.id}-${idx}`,
       title: a.title,
       subtitle: a.subtitle || "Standard Extract",
       status: a.status || "Ready",
@@ -73,7 +73,7 @@ export function initStoreFromMockData() {
 
     // Documents
     const documents = (clientSpecificData?.documents || MOCK_DOCUMENTS).map((d: any) => ({
-      id: d.name || String(Math.random()),
+      id: d.id || d.name,
       name: d.name,
       type: d.type || "Other",
       status: d.status || "Uploaded",
