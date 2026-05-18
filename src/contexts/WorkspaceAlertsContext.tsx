@@ -107,16 +107,12 @@ export function WorkspaceAlertsProvider({ children }: { children: ReactNode }) {
     } else if (hypothesisSubmitted) {
       targetStep = 4;
     } else if (conflicts.length === 0 && acceptedMappings.length > 0) {
-      targetStep = 3;
-    } else if (acceptedMappings.length > 0) {
-      targetStep = 2;
+      targetStep = 3; // Conflict Resolution — all conflicts resolved, items evaluated
+    } else if (acceptedMappings.length > 0 && conflicts.length > 0) {
+      targetStep = 2; // Reliability Evaluation — items accepted but conflicts still unresolved
     } else {
-      targetStep = 1;
+      targetStep = 1; // Evidence Review — no items accepted yet
     }
-
-    // Step 2 is effectively "Reliability Evaluation" - we are in it if we have at least one accepted item 
-    // but haven't resolved all conflicts yet.
-    // Step 3 is "Conflict Resolution" - we are in it once all conflicts are resolved.
 
     if (targetStep > currentStep) {
       const now = new Date().toISOString();

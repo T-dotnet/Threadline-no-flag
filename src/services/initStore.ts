@@ -4,16 +4,22 @@
  */
 
 import { useClinicalStore } from "./store";
-import { 
-  MOCK_CLIENTS, 
-  MOCK_CLIENT_DATA, 
-  MOCK_ASSESSMENTS, 
-  MOCK_DOCUMENTS, 
+import {
+  MOCK_CLIENTS,
+  MOCK_CLIENT_DATA,
+  MOCK_ASSESSMENTS,
+  MOCK_DOCUMENTS,
 } from "../features/threadline/mockData";
+import { ALL_CONDITIONS } from "../constants";
 
 export function initStoreFromMockData() {
   const clinicalStore = useClinicalStore.getState();
-  
+
+  // Seed conditions independently — may be absent on stores created before this field existed
+  if (clinicalStore.conditions.length === 0) {
+    clinicalStore.setConditions([...ALL_CONDITIONS]);
+  }
+
   // Check if store is already initialized by checking if any clients exist
   if (clinicalStore.clients.length > 0) {
     console.info("PERSISTENCE: Store already initialized. Skipping mock seed.");
@@ -23,18 +29,24 @@ export function initStoreFromMockData() {
   console.info("PERSISTENCE: Initializing store from mock data...");
 
   // 1. Clients
-  const clients = MOCK_CLIENTS.map(c => ({
-    id: c.id,
-    name: c.name,
-    extId: c.extId,
-    clinicians: c.clinicians,
-    ref: "Dr. Smith",
-    consent: !!c.consent,
-    hasConflicts: !!(MOCK_CLIENT_DATA as any)[c.id]?.conflicts?.length,
-    missingDocs: (MOCK_CLIENT_DATA as any)[c.id]?.missingDocuments?.map((d: any) => d.id) || [],
-    clinicalNotes: [],
-    lastUpdated: new Date().toISOString()
-  }));
+  const clients = MOCK_CLIENTS.map(c => {
+    const firstName = c.name.split(' ')[0].toLowerCase();
+    const lastName = c.name.split(' ').pop()?.toLowerCase() ?? 'user';
+    return {
+      id: c.id,
+      name: c.name,
+      extId: c.extId,
+      clinicians: c.clinicians,
+      ref: c.ref,
+      consent: !!c.consent,
+      hasConflicts: !!(MOCK_CLIENT_DATA as any)[c.id]?.conflicts?.length,
+      missingDocs: (MOCK_CLIENT_DATA as any)[c.id]?.missingDocuments?.map((d: any) => d.id) || [],
+      phone: `+61 4${c.id.slice(-2)} 345 678`,
+      email: `${firstName}.${lastName}@example.com`,
+      clinicalNotes: [],
+      lastUpdated: new Date().toISOString()
+    };
+  });
   clinicalStore.setClients(clients);
 
   // 2. Per-client data
