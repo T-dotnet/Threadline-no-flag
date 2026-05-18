@@ -1275,7 +1275,7 @@ export function EvidenceWorkspace({
             <ReviewCategory
               title={`Evidence by Item (${allEvidenceSnippets.length})`}
               items={allEvidenceSnippets
-                .filter(f => !deferredItems.includes(f.id))
+                .filter(f => !deferredItems.includes(f.id) && !!f.text)
                 .map((f) => ({
                   id: f.id,
                   label: f.text,
