@@ -1,5 +1,11 @@
 import { useMemo } from 'react';
 
+function toTagArray(tags: any): string[] {
+  if (Array.isArray(tags)) return tags;
+  if (typeof tags === 'string') return tags.split(',').map((t: string) => t.trim()).filter(Boolean);
+  return ['untagged'];
+}
+
 export function useGroupedEvidence(
   localSessions: any[],
   assessmentItems: any[],
@@ -8,26 +14,26 @@ export function useGroupedEvidence(
 ) {
   return useMemo(() => {
     const allEvidenceSnippets = [
-      ...localSessions.flatMap(s => (s.evidence || []).map((f: any) => ({ 
-        ...f, 
-        sourceSession: s.focus || s.description || 'Clinical Snapshot', 
-        sourceTimestamp: s.date, 
-        sessionId: s.id, 
-        notes: s.notes 
+      ...localSessions.flatMap(s => (s.evidence || []).map((f: any) => ({
+        ...f,
+        sourceSession: s.focus || s.description || 'Clinical Snapshot',
+        sourceTimestamp: s.date,
+        sessionId: s.id,
+        notes: s.notes
       }))),
-      ...assessmentItems.flatMap(a => (a.findings || []).map((f: any) => ({ 
-        ...f, 
-        sourceSession: a.label, 
-        sourceTimestamp: a.date || "Apr 21, 2024", 
-        sourceAssessmentId: a.id, 
-        notes: a.notes 
+      ...assessmentItems.flatMap(a => (a.findings || []).map((f: any) => ({
+        ...f,
+        sourceSession: a.label,
+        sourceTimestamp: a.date || "Apr 21, 2024",
+        sourceAssessmentId: a.id,
+        notes: a.notes
       }))),
-      ...documentItems.flatMap(d => (d.findings || []).map((f: any) => ({ 
-        ...f, 
-        sourceSession: d.label, 
-        sourceTimestamp: d.date || d.creationDate || "Apr 21, 2024", 
-        sourceDocumentId: d.id, 
-        notes: d.notes 
+      ...documentItems.flatMap(d => (d.findings || []).map((f: any) => ({
+        ...f,
+        sourceSession: d.label,
+        sourceTimestamp: d.date || d.creationDate || "Apr 21, 2024",
+        sourceDocumentId: d.id,
+        notes: d.notes
       }))),
       ...evidenceItems.map(f => ({
         ...f,
@@ -41,12 +47,7 @@ export function useGroupedEvidence(
 
     const tagsMap = new Map<string, any[]>();
     allEvidenceSnippets.forEach(snippet => {
-      let tags: string[] = [];
-      if (Array.isArray(snippet.tags)) tags = snippet.tags;
-      else if (snippet.tag) tags = snippet.tag.split(',').map((t: string) => t.trim()).filter(Boolean);
-      
-      if (tags.length === 0) tags = ["untagged"];
-      
+      const tags = toTagArray(snippet.tags ?? snippet.tag);
       tags.forEach((t: string) => {
         const lowerT = t.toLowerCase();
         if (!tagsMap.has(lowerT)) tagsMap.set(lowerT, []);
@@ -63,5 +64,5 @@ export function useGroupedEvidence(
     })).sort((a, b) => b.findings.length - a.findings.length);
 
     return { tagGroups, allEvidenceSnippets };
-  }, [localSessions, assessmentItems, documentItems]);
+  }, [localSessions, assessmentItems, documentItems, evidenceItems]);
 }

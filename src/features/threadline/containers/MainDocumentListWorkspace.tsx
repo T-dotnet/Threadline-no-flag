@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-import { 
-  Search,
-  ChevronDown,
-  FileText,
-  Upload
-} from "lucide-react";
+import { ChevronDown, FileText, Upload } from "lucide-react";
 import { DIVIDER, TYPE_SCALE, TEXT_PRIMARY, TEXT_SECONDARY, h1Style, subStyle } from "../constants";
 import { MOCK_CLIENTS, MOCK_CLIENT_DATA } from "../mockData";
 import { Button, Card, Typography, Badge } from "@ui/index";
+import { SearchInput } from "../components/SearchInput";
 import { StatusBadge } from "@shared/StatusBadge";
 import { FileTypeBadge } from "@shared/FileTypeBadge";
 import { WorkspaceLayout } from "@components/layout/WorkspaceLayout";
@@ -56,16 +52,11 @@ export function MainDocumentListWorkspace() {
     <div className="flex flex-col h-full">
       {/* Table Controls (Search) */}
       <div className="flex justify-end p-6">
-        <div className="relative w-[320px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" size={18} />
-          <input 
-            type="text" 
-            placeholder="Search by Client, Type, or Name" 
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full h-11 pl-10 pr-4 border border-divider rounded bg-white text-sm outline-none"
-          />
-        </div>
+        <SearchInput
+          placeholder="Search by Client, Type, or Name"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
       {/* Table Body */}

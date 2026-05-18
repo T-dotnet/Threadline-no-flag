@@ -18,46 +18,7 @@ import { FormField } from "./shared/FormField";
 import { ModalFooter } from "./shared/ModalFooter";
 import { MOCK_CLIENTS, MOCK_CLIENT_DATA } from "../mockData";
 import { cn } from "@lib/utils";
-
-interface AssessmentTemplate {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-}
-
-const ASSESSMENT_TEMPLATES: AssessmentTemplate[] = [
-  { 
-    id: "gad-7", 
-    name: "GAD-7 (Generalized Anxiety Disorder)", 
-    description: "Evaluates the presence and severity of general anxiety symptoms over the past two weeks.",
-    category: "Anxiety"
-  },
-  { 
-    id: "phq-9", 
-    name: "PHQ-9 (Patient Health Questionnaire)", 
-    description: "Multipurpose instrument for screening, diagnosing, monitoring and measuring the severity of depression.",
-    category: "Depression"
-  },
-  { 
-    id: "wai", 
-    name: "WAI (Working Alliance Inventory)", 
-    description: "Assesses the therapeutic bond and agreement on therapy goals.",
-    category: "Clinical Alliance"
-  },
-  { 
-    id: "asrs-6", 
-    name: "ASRS-6 (Adult ADHD Screening)", 
-    description: "Screening scale for adult ADHD based on DSM-V criteria.",
-    category: "Neurodivergence"
-  },
-  { 
-    id: "dass-21", 
-    name: "DASS-21 (Depression Anxiety Stress Scale)", 
-    description: "Measures the negative emotional states of depression, anxiety and stress.",
-    category: "General Health"
-  },
-];
+import { ASSESSMENT_TEMPLATES } from "./constants";
 
 interface StartAssessmentModalProps {
   isOpen: boolean;

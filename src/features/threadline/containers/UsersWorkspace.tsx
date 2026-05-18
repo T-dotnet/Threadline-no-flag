@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import { Search, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { SimpleDropdown } from "@components/common/UIElements";
 import { WorkspaceLayout } from "@components/layout/WorkspaceLayout";
 import { Card, Typography, Button } from "@ui/index";
+import { SearchInput } from "../components/SearchInput";
 
 export function UsersWorkspace() {
   const [roleFilter, setRoleFilter] = useState("All Roles");
+  const [search, setSearch] = useState("");
   const users = [
     { name: "Dr. Olivia Porter", role: "Admin", email: "olivia.porter@threadline.com", lastActive: "Just now" },
     { name: "Dr. James Wilson", role: "Clinician", email: "james.wilson@threadline.com", lastActive: "2 hours ago" },
@@ -26,14 +28,11 @@ export function UsersWorkspace() {
             />
           </div>
 
-          <div className="relative w-[320px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-text-disabled" size={18} />
-            <input 
-              type="text" 
-              placeholder="Search by Name or Email" 
-              className="w-full h-11 pl-10 pr-4 border border-divider rounded-lg text-sm bg-white outline-none focus:border-primary/50 text-text-primary placeholder:text-text-disabled" 
-            />
-          </div>
+          <SearchInput
+            placeholder="Search by Name or Email"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
         </div>
 
         <div className="overflow-x-auto bg-white">
